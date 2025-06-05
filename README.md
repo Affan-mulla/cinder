@@ -12,7 +12,8 @@ Cinder is a full-stack, browser-based podcast recording platform inspired by [Ri
 | ------------- | -------------------------------------------- |
 | Next.js       | Full-stack React framework with App Router   |
 | LiveKit SFU   | Real-time video/audio via WebRTC             |
-| Supabase      | Auth, PostgreSQL DB, and file storage        |
+| Clerk         | For Authentication                           |
+| Neon          | PostgreSQL DB, and file storage              |
 | Prisma        | Database ORM                                 |
 | Tailwind CSS  | Utility-first styling                        |
 | TypeScript    | Strongly typed codebase                      |
@@ -22,7 +23,7 @@ Cinder is a full-stack, browser-based podcast recording platform inspired by [Ri
 ## ✨ Features
 
 - ✅ Studio-quality local recording
-- 🔐 Auth with email/password + Google (Supabase)
+- 🔐 Auth with email/password + Github (Clerk)
 - 🎥 Real-time audio/video using LiveKit (SFU)
 - 🧠 SSR middleware for session-based auth
 - 📂 File uploads for audio/video post-session
