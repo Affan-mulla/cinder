@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id         String   @id @default(cuid())
+  clerkId    String   @unique
+  name       String
+  email      String   @unique
+  avatar_url String?
+  createdAt  DateTime @default(now())
+
+  sessions     Session[]
+  participants Participant[]
+  studio       Studio?
+}
+
+model Session {
+  id        String    @id @default(cuid())
+  title     String
+  createdAt DateTime  @default(now())
+  endedAt   DateTime?
+
+  hostUserId String
+  host       Profile @relation(fields: [hostUserId], references: [id])
+
+  participants Participant[]
+  recordings   Recording[]
+
+  @@index([hostUserId])
+}
+
+model Participant {
+  id        String    @id @default(cuid())
+  sessionId String
+  userId    String
+  joinedAt  DateTime  @default(now())
+  leftAt    DateTime?
+
+  session    Session     @relation(fields: [sessionId], references: [id])
+  user       Profile     @relation(fields: [userId], references: [id])
+  recordings Recording[]
+
+  @@index([sessionId])
+  @@index([userId])
+}
+
+model Recording {
+  id            String   @id @default(cuid())
+  sessionId     String
+  participantId String
+  fileUrl       String
+  duration      Int
+  createdAt     DateTime @default(now())
+
+  session     Session     @relation(fields: [sessionId], references: [id])
+  participant Participant @relation(fields: [participantId], references: [id])
+
+  @@index([sessionId])
+  @@index([participantId])
+}
+
+model Studio {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  slug      String   @unique
+  logoUrl   String?
+  createdAt DateTime @default(now())
+
+  user Profile @relation(fields: [userId], references: [id])
+}
