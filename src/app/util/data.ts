@@ -1,4 +1,6 @@
-import { File, FlameIcon, Home, PanelRightClose, PanelRightOpen, Settings, Video } from 'lucide-react'
+import { File, Home, Video } from 'lucide-react'
+
+
 export const page = [
     {
         name: 'Home',

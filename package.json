@@ -10,13 +10,17 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.20.2",
+    "@livekit/components-react": "^2.9.9",
+    "@livekit/components-styles": "^1.1.6",
     "@prisma/client": "^6.9.0",
     "@radix-ui/react-popover": "^1.1.14",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tooltip": "^1.2.7",
+    "axios": "^1.9.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.16.0",
+    "livekit-client": "^2.13.3",
     "lucide-react": "^0.512.0",
     "next": "15.3.3",
     "next-themes": "^0.4.6",
@@ -27,7 +31,8 @@
     "sonner": "^2.0.5",
     "tailwind-merge": "^3.3.0",
     "tsx": "^4.19.4",
-    "zod": "^3.25.50"
+    "zod": "^3.25.50",
+    "zustand": "^5.0.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

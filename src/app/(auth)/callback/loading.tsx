@@ -1,6 +1,6 @@
 import React from 'react'
 
-const loading = () => {
+const loading = () => {  
   return (
     <div>loading</div>
   )

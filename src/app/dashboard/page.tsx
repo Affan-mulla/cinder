@@ -1,8 +1,6 @@
-import { redirect } from 'next/navigation'
-import React from 'react'
-
+import { redirect } from "next/navigation";
 const page = () => {
-  redirect('/dashboard/home')
-}
+ redirect("/dashboard/home");
+};
 
-export default page
+export default page;

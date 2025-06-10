@@ -16,7 +16,7 @@ export async function onAuthenticateUser() {
 
         const findUser = await prisma.profile.findUnique({
             where: {
-                clerkId: user.id
+                id: user.id
             }
         })
         if(findUser) {
@@ -28,7 +28,7 @@ export async function onAuthenticateUser() {
 
         const createUser = await prisma.profile.create({
             data: {
-                clerkId : user.id,
+                id : user.id,
                 name : user.username || user.firstName+" "+user.lastName,
                 email : user.emailAddresses[0].emailAddress,
                 avatar_url : user.imageUrl || null
@@ -39,7 +39,7 @@ export async function onAuthenticateUser() {
             const createStudio = await prisma.studio.create({
                 data: {
                     slug : createUser.name.toLowerCase().replace(/\s+/g, '-').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '')+"-studio-"+Math.random().toString(36).substring(2,7),
-                    userId : createUser.id,
+                    userId : user.id,
                     logoUrl : createUser.avatar_url || null,
                 }
             })

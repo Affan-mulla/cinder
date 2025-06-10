@@ -7,20 +7,20 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { page } from "../util/data";
 import LinkBtn from "@/components/Sidebar/linkBtn";
-import FaceBtn from "@/components/Sidebar/FaceBtn";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
+import useUserStore from "@/store/store";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = React.useState(true);
   const params = usePathname();
-
+  const {user} = useUserStore()
   return (
     <motion.div
       animate={{
-        width: isOpen ? "calc(var(--spacing) * 75)" : "72px",
+        width: isOpen ? "calc(var(--spacing) * 65)" : "72px",
       }}
       transition={{
         ease: "linear",
@@ -76,7 +76,7 @@ const Sidebar = () => {
               <LinkBtn
                 key={index}
                 name={item.name}
-                link={item.href}
+                link={item.name === "Studio" ? `/studio/${user.slug}` : item.href}
                 params={params}
                 Icon={item.icon}
                 index={index}

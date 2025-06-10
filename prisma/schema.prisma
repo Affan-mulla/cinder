@@ -8,50 +8,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Profile {
-  id         String   @id @default(cuid())
-  clerkId    String   @unique
+model profile {
+  id         String   @id @unique
   name       String
   email      String   @unique
   avatar_url String?
   createdAt  DateTime @default(now())
 
-  sessions     Session[]
-  participants Participant[]
-  studio       Studio?
+  sessions     session[]
+  participants participant[]
+  studio       studio?
 }
 
-model Session {
+model session {
   id        String    @id @default(cuid())
   title     String
   createdAt DateTime  @default(now())
   endedAt   DateTime?
 
   hostUserId String
-  host       Profile @relation(fields: [hostUserId], references: [id])
+  host       profile @relation(fields: [hostUserId], references: [id])
 
-  participants Participant[]
-  recordings   Recording[]
+  participants participant[]
+  recordings   recording[]
 
   @@index([hostUserId])
 }
 
-model Participant {
+model participant {
   id        String    @id @default(cuid())
   sessionId String
   userId    String
   joinedAt  DateTime  @default(now())
   leftAt    DateTime?
 
-  session    Session     @relation(fields: [sessionId], references: [id])
-  user       Profile     @relation(fields: [userId], references: [id])
-  recordings Recording[]
+  session    session     @relation(fields: [sessionId], references: [id])
+  user       profile     @relation(fields: [userId], references: [id])
+  recordings recording[]
 
   @@index([sessionId])
   @@index([userId])
 }
 
-model Recording {
+model recording {
   id            String   @id @default(cuid())
   sessionId     String
   participantId String
@@ -59,19 +58,19 @@ model Recording {
   duration      Int
   createdAt     DateTime @default(now())
 
-  session     Session     @relation(fields: [sessionId], references: [id])
-  participant Participant @relation(fields: [participantId], references: [id])
+  session     session     @relation(fields: [sessionId], references: [id])
+  participant participant @relation(fields: [participantId], references: [id])
 
   @@index([sessionId])
   @@index([participantId])
 }
 
-model Studio {
+model studio {
   id        String   @id @default(cuid())
   userId    String   @unique
   slug      String   @unique
   logoUrl   String?
   createdAt DateTime @default(now())
 
-  user Profile @relation(fields: [userId], references: [id])
+  user profile @relation(fields: [userId], references: [id])
 }
