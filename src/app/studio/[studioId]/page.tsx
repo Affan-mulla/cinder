@@ -6,12 +6,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import axios from "axios";
 import {
-  Camera,
-  CameraOff,
   ChevronLeft,
-  LoaderCircle,
-  Mic,
-  MicOff,
   Tally1,
 } from "lucide-react";
 import useUserStore from "@/store/store";
@@ -19,6 +14,7 @@ import StoreLoader from "@/components/Loader/StoreLoader";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import VideoSession from "./VideoSession";
+import { getToken } from "@/actions/getToken";
 
 const Page = () => {
   const user = useUserStore((s) => s.user);
@@ -46,12 +42,9 @@ const Page = () => {
   const onSubmit = async (data: any) => {
     setLoading(true);
     try {
-      const createSession = await axios.post(
-        "http://localhost:3001/token",
-        data
-      );
-      if (createSession.status === 200) {
-        setToken(createSession.data.token);
+     const createSession : any = await getToken(data);
+      if (createSession.token !== undefined) {
+        setToken(createSession?.token);
       }
     } catch (error) {
       console.log(error);
