@@ -39,3 +39,34 @@ export async function getUserDetails() : Promise<GetUserDetailsResponse> {
     }
     
 }
+
+export async function checkHost({userId, slug} : {userId: string, slug: string})  {
+   try {
+    const studio = await prisma.studio.findUnique({
+        where : {
+           user_id : userId,
+           slug
+        }
+        ,
+        select : {
+            user_id : true
+        }
+    })
+
+    if(studio) {
+        return {
+            status : 200,
+            message : "Host found."
+        }
+    }
+    return {
+        status : 404,
+        message : "Host not found."
+    }
+   } catch (error) {
+    return {
+        status : 500,
+        message : "Something went wrong."+error
+    }
+   }
+}

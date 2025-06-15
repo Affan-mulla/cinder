@@ -6,7 +6,7 @@ export async function getSlug() {
     const user = await currentUser();
     const slug = await prisma.studio.findUnique({
         where : {
-            userId : user?.id
+            user_id : user?.id
         },
         select : {
             slug : true

@@ -1,28 +1,65 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { DialogCloseButton } from "@/components/Dialog/ShareLink";
 import { Input } from "@/components/ui/input";
-import { UserRoundPlus } from "lucide-react";
-import React, { useEffect } from "react";
-import LivekitComponents from "./livekitComponents";
+import React, { useEffect, useRef, useState } from "react";
+import VideoComponents from "./VideoComponents";
+import { createSession } from "@/actions/createSession";
+import useUserStore from "@/store/store";
+const VideoSession = ({
+  token,
+  roomId,
+  isHost,
+}: {
+  token: string;
+  roomId: string;
+  isHost: boolean;
+}) => {
+  const [title, setTitle] = useState("");
+  const [sessionId, setSessionId] = useState("");
+  const user = useUserStore((s) => s.user);
+  const hasCreatedRef = useRef(false);
 
-const VideoSession = ({ token }: { token: string }) => {
+  useEffect(() => {
+    if (hasCreatedRef.current) return;
+    hasCreatedRef.current = true;
+
+    async function sessionCreate() {
+      try {
+        const res = await createSession({
+          title,
+          hostId: user?.id as string,
+          sessionId,
+        });
+        if (res.status === 200) {
+          console.log(res.data);
+          setSessionId(res.data.id);
+        }
+      } catch (error) {
+        console.error("Error creating session:", error);
+      }
+    }
+
+    sessionCreate();
+  }, [title]);
 
   return (
-    <div className="h-screen w-full flex bg-neutral-900 p-2">
-      <div className="flex-1/2 flex flex-col gap-3">
-        <div className="flex justify-between">
+    <div className="flex h-screen p-4 bg-neutral-900">
+      <div className="flex-1 flex flex-col gap-2">
+        <div className="flex justify-between items-center">
           <Input
-            className="w-50 bg-neutral-800 border-0 text-white font-bold text-xl"
             placeholder="Untitled Recording"
+            className="font-bold max-w-[25%] text-white bg-neutral-900"
+            onBlur={(e) => {
+              setTitle(e.target.value);
+              hasCreatedRef.current = false;
+            }}
           />
-          <Button className="bg-neutral-800 hover:bg-neutral-700/70 cursor-pointer">
-            <UserRoundPlus />
-            <p>Invite</p>
-          </Button>
+          {isHost && <DialogCloseButton link={roomId} />}
         </div>
-        <LivekitComponents token={token} />
+        <div className="flex-1 flex flex-col gap-2">
+          <VideoComponents token={token} />
+        </div>
       </div>
-      <div className="flex-1"></div>
     </div>
   );
 };
