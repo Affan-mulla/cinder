@@ -13,28 +13,53 @@ import {
   LeaveIcon,
   useRoomContext,
   usePagination,
+  AudioTrack,
+  TrackLoop,
 } from "@livekit/components-react";
 import { Track } from "livekit-client";
-import React from "react";
-
+import React, { use } from "react";
 const RoomRenderer = () => {
-  const tracks = useTracks([Track.Source.Camera]);
-  const pagination = usePagination(3, tracks)
+  const videoTracks = useTracks([Track.Source.Camera]);
+  const audioTrack = useTracks([Track.Source.Microphone]);
+  const pagination = usePagination(3, videoTracks);
 
   return (
+    <>
     <GridLayout
       tracks={pagination.tracks}
-      className={`grid auto-rows-auto  gap-2 bg-neutral-800 items-center p-2 rounded-2xl overflow-hidden h-full w-full`}
+      className="grid auto-rows-auto gap-2 bg-neutral-800 items-center p-2 rounded-2xl overflow-hidden h-full w-full"
       style={{
         gridTemplateColumns: `repeat(auto-fit, minmax(200px, 1fr))`,
       }}
-    >
-      <VideoTrack className="rounded-2xl border-4 border-violet-600 object-cover max-w-[50rem] w-full h-full" />
+      >
+      <VideoTrack
+        className="rounded-2xl border-4 border-violet-600 object-cover max-w-[50rem] w-full h-full"
+        muted={false}
+      />
     </GridLayout>
+    {
+      audioTrack.map((track, i) => (
+        <AudioTrack
+        trackRef={track}
+          key={i}
+          className="hidden"
+          muted={false}
+        />
+      ))
+    }
+    
+      
+      </>
   );
 };
 
-const VideoComponents = ({ token }: { token: string }) => {
+const VideoComponents = ({
+  token,
+  delSession,
+}: {
+  token: string;
+  delSession: () => void;
+}) => {
   return (
     <LiveKitRoom
       serverUrl="wss://cinder-yprycp7v.livekit.cloud"
@@ -45,7 +70,7 @@ const VideoComponents = ({ token }: { token: string }) => {
       className="w-full h-full flex justify-center items-center flex-col"
     >
       <RoomRenderer />
-      <Buttons />
+      <Buttons delSession={delSession} />
     </LiveKitRoom>
   );
 };

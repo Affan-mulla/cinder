@@ -3,7 +3,7 @@ import { DialogCloseButton } from "@/components/Dialog/ShareLink";
 import { Input } from "@/components/ui/input";
 import React, { useEffect, useRef, useState } from "react";
 import VideoComponents from "./VideoComponents";
-import { createSession } from "@/actions/createSession";
+import { createSession, deleteSession } from "@/actions/createSession";
 import useUserStore from "@/store/store";
 const VideoSession = ({
   token,
@@ -42,6 +42,17 @@ const VideoSession = ({
     sessionCreate();
   }, [title]);
 
+  const delSession = async () => {
+    try {
+      const res = await deleteSession({ sessionId });
+      if (res.status === 200) {
+        console.log(res);
+      }
+    } catch (error) {
+      console.error("Error deleting session:", error);
+    }
+  };
+
   return (
     <div className="flex h-screen p-4 bg-neutral-900">
       <div className="flex-1 flex flex-col gap-2">
@@ -57,7 +68,7 @@ const VideoSession = ({
           {isHost && <DialogCloseButton link={roomId} />}
         </div>
         <div className="flex-1 flex flex-col gap-2">
-          <VideoComponents token={token} />
+          <VideoComponents token={token} delSession={delSession} />
         </div>
       </div>
     </div>

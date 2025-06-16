@@ -13,8 +13,9 @@ import { useRouter } from "next/navigation";
 import { Track } from "livekit-client";
 import useUserStore from "@/store/store";
 import axios from "axios";
+import { deleteSession } from "@/actions/createSession";
 
-const Buttons = () => {
+const Buttons = ({ delSession }: { delSession: () => void }) => {
   const room = useRoomContext();
   const router = useRouter();
   const [camera, setCamera] = React.useState(
@@ -34,20 +35,25 @@ const Buttons = () => {
     room.localParticipant.setMicrophoneEnabled(
       !room.localParticipant.isMicrophoneEnabled
     );
-    setMic(room.localParticipant.isCameraEnabled);
+    setMic(room.localParticipant.isMicrophoneEnabled);
   };
 
   const disconnectAndRedirect = () => {
     console.log("Disconnecting from room...");
-    if (mediaRecorder && mediaRecorder.state === "recording") {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
       mediaRecorder.stop(); // ✅ this triggers onstop and uploads the file
     }
+    
     room.disconnect();
   };
 
   const leaveRoom = async() => {
     if (user.id) {
       await room.localParticipant.publishData(new TextEncoder().encode("end-call"));
+      if(chunks.length === 0) {
+        delSession();
+        router.push("/dashboard/home");
+      }
     }
     disconnectAndRedirect();
   };

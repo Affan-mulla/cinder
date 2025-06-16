@@ -40,3 +40,54 @@ console.log(session);
         }
     }
 }
+
+export const deleteSession = async({sessionId} : {sessionId : string}) => {
+try {
+    const session = await prisma.session.delete({
+        where : {
+            id : sessionId
+        }
+    })
+
+    if(session) return {
+        status : 200,
+        message : "Session deleted successfully"
+    }
+    return {
+        status : 404,
+        message : "Session not found"
+    }
+} catch (error) {
+    return {
+        status : 500,
+        message : "Something went wrong."+error
+    }
+}
+}
+
+export const updateSession = async({sessionId, title} : {sessionId : string ,title : string}) => {
+    try {
+        const session = await prisma.session.update({
+            where : {
+                id : sessionId
+            },
+            data : {
+                title : title || "Untitled Recording"
+            }
+        })
+        if(!session) return {
+            status : 404,
+            message : "Session not found"
+        }
+        return ({
+            status : 200,
+            message : "Session updated successfully",
+            data : session
+        })
+    } catch (error) {
+        return {
+            status : 500,
+            message : "Something went wrong."+error
+        }
+    }
+}
