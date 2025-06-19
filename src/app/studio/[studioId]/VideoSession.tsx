@@ -15,24 +15,24 @@ const VideoSession = ({
   isHost: boolean;
 }) => {
   const [title, setTitle] = useState("");
-  const [sessionId, setSessionId] = useState("");
   const user = useUserStore((s) => s.user);
   const hasCreatedRef = useRef(false);
 
   useEffect(() => {
     if (hasCreatedRef.current) return;
     hasCreatedRef.current = true;
-
     async function sessionCreate() {
       try {
         const res = await createSession({
           title,
           hostId: user?.id as string,
-          sessionId,
+          sessionId: user.session_id,
         });
         if (res.status === 200) {
           console.log(res.data);
-          setSessionId(res.data.id);
+          useUserStore.setState((state) => ({
+            user: { ...state.user, session_id: res.data.id },
+          }));
         }
       } catch (error) {
         console.error("Error creating session:", error);
@@ -44,7 +44,7 @@ const VideoSession = ({
 
   const delSession = async () => {
     try {
-      const res = await deleteSession({ sessionId });
+      const res = await deleteSession({ sessionId: user.session_id });
       if (res.status === 200) {
         console.log(res);
       }
@@ -60,6 +60,8 @@ const VideoSession = ({
           <Input
             placeholder="Untitled Recording"
             className="font-bold max-w-[25%] text-white bg-neutral-900"
+            disabled={!isHost}
+            defaultValue={title}
             onBlur={(e) => {
               setTitle(e.target.value);
               hasCreatedRef.current = false;

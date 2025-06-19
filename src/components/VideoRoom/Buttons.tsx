@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useRef, useState, useEffect } from "react";
 import { Button } from "../ui/button";
 import { Camera, Play } from "lucide-react";
 import {
@@ -10,89 +12,36 @@ import {
   useRoomContext,
 } from "@livekit/components-react";
 import { useRouter } from "next/navigation";
-import { Track } from "livekit-client";
 import useUserStore from "@/store/store";
 import axios from "axios";
-import { deleteSession } from "@/actions/createSession";
-
+import { createParticipant } from "@/actions/participant";
+import { addRecording } from "@/actions/recording";
 const Buttons = ({ delSession }: { delSession: () => void }) => {
   const room = useRoomContext();
   const router = useRouter();
-  const [camera, setCamera] = React.useState(
-    room.localParticipant.isCameraEnabled
-  );
-  const [mic, setMic] = React.useState(
-    room.localParticipant.isMicrophoneEnabled
-  );
-  const cameraToggle = () => {
-    room.localParticipant.setCameraEnabled(
-      !room.localParticipant.isCameraEnabled
-    );
-    setCamera(room.localParticipant.isCameraEnabled);
+  const user = useUserStore.getState().user;
+
+  const [camera, setCamera] = useState(room.localParticipant.isCameraEnabled);
+  const [mic, setMic] = useState(room.localParticipant.isMicrophoneEnabled);
+  const [isRecording, setIsRecording] = useState(false);
+  let session_id = "";
+  let participant_id = "";
+  const chunks = useRef<Blob[]>([]);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+
+  const toggleCamera = () => {
+    const newState = !room.localParticipant.isCameraEnabled;
+    room.localParticipant.setCameraEnabled(newState);
+    setCamera(newState);
   };
 
-  const micToggle = () => {
-    room.localParticipant.setMicrophoneEnabled(
-      !room.localParticipant.isMicrophoneEnabled
-    );
-    setMic(room.localParticipant.isMicrophoneEnabled);
+  const toggleMic = () => {
+    const newState = !room.localParticipant.isMicrophoneEnabled;
+    room.localParticipant.setMicrophoneEnabled(newState);
+    setMic(newState);
   };
 
-  const disconnectAndRedirect = () => {
-    console.log("Disconnecting from room...");
-    if (mediaRecorder && mediaRecorder.state === 'recording') {
-      mediaRecorder.stop(); // ✅ this triggers onstop and uploads the file
-    }
-    
-    room.disconnect();
-  };
-
-  const leaveRoom = async() => {
-    if (user.id) {
-      await room.localParticipant.publishData(new TextEncoder().encode("end-call"));
-      if(chunks.length === 0) {
-        delSession();
-        router.push("/dashboard/home");
-      }
-    }
-    disconnectAndRedirect();
-  };
-
-  let mediaRecorder: MediaRecorder;
-  let chunks: Blob[] = [];
-
-  async function startLocalRecording() {
-    console.log("Starting local recording...");
-
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true,
-    });
-    mediaRecorder = new MediaRecorder(stream);
-    chunks = [];
-
-    mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
-
-    mediaRecorder.onstop = async () => {
-      const blob = new Blob(chunks, { type: "video/webm" });
-      const file = new File(
-        [blob],
-        `${room.localParticipant.identity}-${Date.now()}.webm`,
-        {
-          type: "video/webm",
-        }
-      );
-
-      // Upload here (Supabase, Appwrite, etc.)
-      const result = await uploadToCloudinary(file);
-
-      console.log("Cloudinary URL:", result);
-    };
-
-    mediaRecorder.start();
-  }
-
-  async function uploadToCloudinary(file: File) {
+  const uploadToCloudinary = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", "videos");
@@ -102,26 +51,130 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
       formData
     );
 
-    const data = await res.data;
+    return res.data;
+  };
 
-    console.log(data);
-    return data;
+  const addParticipant = async ({ sessionId }: { sessionId: string }) => {
+    session_id = sessionId;
+    if (!sessionId) return console.warn("Session id not found");
+    console.log("Adding participant...");
+    const res = await createParticipant({ sessionId });
+    if (res.status === 200) {
+      participant_id = res.data?.id || "";
+    };
+  };
+
+  const createRecording = async(data : any) => {
+    console.log("createRecording");
+    
+    const {secure_url : fileUrl,duration} = data;
+    if(!fileUrl || !duration || !participant_id || !session_id) return console.warn({fileUrl,duration,participant_id,session_id});
+
+    const res = await addRecording({session_id,fileUrl,duration,participant_id} )
+    if(res.status === 200){
+      console.log(res.data);
+    }
+
   }
 
-  room.on("dataReceived", (payload) => {
-    const message = new TextDecoder().decode(payload);
-    if (message === "start-recording") {
-      startLocalRecording();
-    }
-    if (message === "end-call") {
-      disconnectAndRedirect();
-    }
-  });
+  const startLocalRecording = async () => {
+    if (isRecording) return;
 
-  const user = useUserStore((s) => s.user);
+    console.log("Starting local recording...");
+    setIsRecording(true);
+    if (user.id) {
+      // Send session ID to remote participants
+      room.localParticipant.publishData(
+        new TextEncoder().encode(`session-id:${user.session_id}`)
+      );
+      addParticipant({ sessionId: user.session_id });
+    }
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    });
+
+    const recorder = new MediaRecorder(stream);
+    mediaRecorderRef.current = recorder;
+    chunks.current = [];
+
+    recorder.ondataavailable = (e) => chunks.current.push(e.data);
+
+    recorder.onstop = async () => {
+      const blob = new Blob(chunks.current, { type: "video/webm" });
+      const file = new File(
+        [blob],
+        `${room.localParticipant.identity}-${Date.now()}.webm`,
+        { type: "video/webm" }
+      );
+
+      try {
+        const result = await uploadToCloudinary(file);
+        if(result){
+          console.log("result");
+          
+          createRecording(result)
+        }
+        console.log("Cloudinary URL:", result);
+      } catch (err) {
+        console.error("Upload failed", err);
+      }
+    };
+
+    recorder.start();
+  };
+
+  const disconnectAndRedirect = () => {
+    console.log("Disconnecting from room...");
+    if (mediaRecorderRef.current?.state === "recording") {
+      mediaRecorderRef.current.stop();
+    } else{
+      if (user.id) delSession();
+    }
+    room.disconnect();
+    router.push("/dashboard/home");
+  };
+
+  const leaveRoom = async () => {
+    if (user.id) {
+      await room.localParticipant.publishData(
+        new TextEncoder().encode("end-call")
+      );
+    }
+    disconnectAndRedirect();
+  };
+
+  useEffect(() => {
+    const handleData = (payload: Uint8Array) => {
+      let remoteSessionId: string | null = null;
+      const message = new TextDecoder().decode(payload);
+
+      if (message.startsWith("session-id:")) {
+        remoteSessionId = message.split("session-id:")[1];
+        console.log("Received session ID:", remoteSessionId);
+        // Call addParticipant with received session ID
+        addParticipant({ sessionId: remoteSessionId });
+      }
+
+      if (message === "start-recording" && !isRecording) {
+        startLocalRecording();
+      }
+
+      if (message === "end-call") {
+        console.log("Received end-call message");
+        disconnectAndRedirect();
+      }
+    };
+
+    room.on("dataReceived", handleData);
+    return () => {
+      room.off("dataReceived", handleData);
+    };
+  }, [isRecording]);
 
   return (
-    <div className="h-[5rem]  w-full absolute bottom-0 p-2 flex justify-center">
+    <div className="h-[5rem] w-full absolute bottom-0 p-2 flex justify-center">
       <div className="flex justify-center items-center gap-2 bg-violet-600 rounded-2xl px-5 w-fit">
         {user.id && (
           <Button
@@ -129,16 +182,16 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
               room.localParticipant.publishData(
                 new TextEncoder().encode("start-recording")
               );
-              startLocalRecording();
+              startLocalRecording(); // ✅ still needed to start locally
             }}
           >
             <Play />
           </Button>
         )}
-        <Button onClick={cameraToggle}>
+        <Button onClick={toggleCamera}>
           {camera ? <CameraIcon /> : <CameraDisabledIcon />}
         </Button>
-        <Button onClick={micToggle}>
+        <Button onClick={toggleMic}>
           {mic ? <MicIcon /> : <MicDisabledIcon />}
         </Button>
         <Button onClick={leaveRoom}>

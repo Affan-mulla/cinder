@@ -7,6 +7,7 @@ type UserInfo = {
   email: string
   avatar_url: string | null
   slug: string
+  session_id: string
 }
 
 interface UserState {
@@ -23,6 +24,7 @@ const defaultUser: UserInfo = {
   email: '',
   avatar_url: null,
   slug: '',
+  session_id: '',
 }
 
 const useUserStore = create<UserState>()(
@@ -36,11 +38,19 @@ const useUserStore = create<UserState>()(
     }),
     {
       name: 'user-store',
+      partialize: (state) => ({
+        ...state,
+        user: {
+          ...state.user,
+          session_id: undefined,
+        },
+      }),
       onRehydrateStorage: () => (state) => {
-        state?.setHasHydrated(true)
+        state?.setHasHydrated(true);
       },
     }
   )
-)
+);
+
 
 export default useUserStore

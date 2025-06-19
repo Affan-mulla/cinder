@@ -21,7 +21,6 @@ export async function getUserDetails() : Promise<GetUserDetailsResponse> {
     const user = await currentUser();
     try {
         const userDetails = await prisma.$queryRaw<UserData[]>`SELECT profile.*, studio.slug FROM profile LEFT JOIN studio ON profile.id = studio.user_id WHERE Profile.id = ${user?.id}`;
-        console.log(userDetails);
         if(userDetails) return {
             status : 200,
             message : "User found.",

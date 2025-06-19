@@ -1,93 +1,81 @@
-"use server"
-import { prisma } from "@/lib/prismaClient"
+"use server";
+import { prisma } from "@/lib/prismaClient";
 
 type session = {
-    title : string,
-    hostId : string
-    sessionId? : string
-}
+  title: string;
+  hostId: string;
+  sessionId: string;
+};
 
-export const createSession = async({title,hostId,sessionId} : session) : Promise<{status : number, message : string, data? : any}> => {
-    try {
-        const session = await prisma.session.upsert({
-            where : {
-                id : sessionId,
-            },
-            update : {
-                title : title
-            },
-            create : {
-                title : title || "Untitled Recording",
-                host_id : hostId
-            }
-        })
-console.log(session);
-
-        if(session) return {
-            status : 200,
-            message : "Session created successfully",
-            data : session
-        }
-        
+export const createSession = async ({
+  title,
+  hostId,
+  sessionId,
+}: session): Promise<{ status: number; message: string; data?: any }> => {
+  try {
+    if (sessionId) {
+      const session = await prisma.session.update({
+        where: {
+          id: sessionId,
+        },
+        data: {
+          title,
+        },
+      });
+      if (session)
         return {
-            status : 404,
-            message : "Session not created"
-        }
-    } catch (error) {
+          status: 200,
+          message: "Session created successfully",
+          data: session,
+        };
+    } else {
+      const session = await prisma.session.create({
+        data: {
+          title,
+          host_id: hostId,
+        },
+      });
+      if (session)
         return {
-            status : 500,
-            message : "Something went wrong."+error 
-        }
+          status: 200,
+          message: "Session created successfully",
+          data: session,
+        };
     }
-}
 
-export const deleteSession = async({sessionId} : {sessionId : string}) => {
-try {
+    return {
+      status: 404,
+      message: "Session not created",
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: "Something went wrong." + error,
+    };
+  }
+};
+
+export const deleteSession = async ({ sessionId }: { sessionId?: string }) => {
+  try {
     const session = await prisma.session.delete({
-        where : {
-            id : sessionId
-        }
-    })
+      where: {
+        id: sessionId,
+      },
+    });
 
-    if(session) return {
-        status : 200,
-        message : "Session deleted successfully"
-    }
+    if (session)
+      return {
+        status: 200,
+        message: "Session deleted successfully",
+      };
     return {
-        status : 404,
-        message : "Session not found"
-    }
-} catch (error) {
+      status: 404,
+      message: "Session not found",
+    };
+  } catch (error) {
     return {
-        status : 500,
-        message : "Something went wrong."+error
-    }
-}
-}
-
-export const updateSession = async({sessionId, title} : {sessionId : string ,title : string}) => {
-    try {
-        const session = await prisma.session.update({
-            where : {
-                id : sessionId
-            },
-            data : {
-                title : title || "Untitled Recording"
-            }
-        })
-        if(!session) return {
-            status : 404,
-            message : "Session not found"
-        }
-        return ({
-            status : 200,
-            message : "Session updated successfully",
-            data : session
-        })
-    } catch (error) {
-        return {
-            status : 500,
-            message : "Something went wrong."+error
-        }
-    }
-}
+      status: 500,
+      message: "Something went wrong." + error,
+    };
+  }
+};
