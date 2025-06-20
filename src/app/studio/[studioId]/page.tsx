@@ -1,7 +1,6 @@
 "use client";
 
 import { getToken } from "@/actions/getToken";
-import { checkHost } from "@/actions/getUserDetails";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useUserStore from "@/store/store";
@@ -11,6 +10,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import VideoSession from "./VideoSession";
+import axios from "axios";
 
 const Page = () => {
   const user = useUserStore((s) => s.user);
@@ -49,7 +49,11 @@ const Page = () => {
       // Check if user is host
       let isUserHost = false;
       if (user?.id && !guestRoom) {
-        const check = await checkHost({ userId: user.id, slug: studioId as string });
+        const check = await axios.post("/api/check-host", {
+          userId: user.id,
+          slug: studioId,
+        });
+
         if (check.status === 200) {
           isUserHost = true;
           setIsHost(true);
@@ -83,7 +87,10 @@ const Page = () => {
     <div className="flex h-screen flex-col p-2 bg-neutral-900 text-white">
       {/* Header */}
       <div className="w-full flex items-center p-2 gap-2 text-xl">
-        <Link href="/dashboard/home" className="p-1 rounded-lg hover:bg-neutral-800">
+        <Link
+          href="/dashboard/home"
+          className="p-1 rounded-lg hover:bg-neutral-800"
+        >
           <ChevronLeft className="size-7" />
         </Link>
         <div className="flex gap-1 items-center">
@@ -99,8 +106,13 @@ const Page = () => {
       {/* Form */}
       <div className="flex-1 flex justify-center items-center w-full">
         <div className="bg-neutral-800 max-w-[30rem] w-full p-4 rounded-2xl">
-          <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-            <h1 className="text-3xl font-bold">Enter your name to continue...</h1>
+          <form
+            className="flex flex-col gap-4"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <h1 className="text-3xl font-bold">
+              Enter your name to continue...
+            </h1>
             <Input
               placeholder="Enter your name"
               {...register("name", { required: true })}

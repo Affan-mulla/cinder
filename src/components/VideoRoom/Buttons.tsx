@@ -2,7 +2,7 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import { Button } from "../ui/button";
-import { Camera, Play } from "lucide-react";
+import { Play } from "lucide-react";
 import {
   CameraDisabledIcon,
   CameraIcon,
@@ -14,8 +14,6 @@ import {
 import { useRouter } from "next/navigation";
 import useUserStore from "@/store/store";
 import axios from "axios";
-import { createParticipant } from "@/actions/participant";
-import { addRecording } from "@/actions/recording";
 const Buttons = ({ delSession }: { delSession: () => void }) => {
   const room = useRoomContext();
   const router = useRouter();
@@ -58,9 +56,13 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
     session_id = sessionId;
     if (!sessionId) return console.warn("Session id not found");
     console.log("Adding participant...");
-    const res = await createParticipant({ sessionId });
+    const res = await axios.post("/api/participant", {
+      sessionId,
+    })
+    console.log(res);
+    
     if (res.status === 200) {
-      participant_id = res.data?.id || "";
+      participant_id = res.data.data?.id || "";
     };
   };
 
@@ -70,7 +72,12 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
     const {secure_url : fileUrl,duration} = data;
     if(!fileUrl || !duration || !participant_id || !session_id) return console.warn({fileUrl,duration,participant_id,session_id});
 
-    const res = await addRecording({session_id,fileUrl,duration,participant_id} )
+    const res = await axios.post("/api/recording", {
+      fileUrl,
+      participant_id,
+      session_id,
+      duration
+    })
     if(res.status === 200){
       console.log(res.data);
     }
