@@ -2,7 +2,6 @@
 import Sidebar from "./sidebar";
 import useUserStore from "@/store/store";
 import { useEffect, useState } from "react";
-import { getUserDetails } from "@/actions/getUserDetails";
 import StoreLoader from "@/components/Loader/StoreLoader";
 import axios from "axios";
 
@@ -17,7 +16,9 @@ export default function DashboardLayout({
   useEffect(() => {
     const loadData = async () => {
       try {
-        const result = await axios.get("/api/get-user");
+        const result = await axios.get("/api/get-studio");
+        console.log("User data fetched:", result.data);
+        
         const user = result?.data?.[0];
         if (result?.status === 200 && user) {
           setUser({
