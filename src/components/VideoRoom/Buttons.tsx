@@ -33,6 +33,9 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
     setCamera(newState);
   };
 
+  if(!camera){ 
+   
+  }
   const toggleMic = () => {
     const newState = !room.localParticipant.isMicrophoneEnabled;
     room.localParticipant.setMicrophoneEnabled(newState);
@@ -182,7 +185,7 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
 
   return (
     <div className="h-[5rem] w-full absolute bottom-0 p-2 flex justify-center">
-      <div className="flex justify-center items-center gap-2 bg-violet-600 rounded-2xl px-5 w-fit">
+      <div className="flex justify-center items-center gap-2 bg-background border border-border rounded-2xl px-5 w-fit ">
         {user.id && (
           <Button
             onClick={() => {
@@ -192,16 +195,16 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
               startLocalRecording(); // ✅ still needed to start locally
             }}
           >
-            <Play />
+            <Play className="text-foreground" />
           </Button>
         )}
-        <Button onClick={toggleCamera}>
+        <Button onClick={toggleCamera} className="text-foreground">
           {camera ? <CameraIcon /> : <CameraDisabledIcon />}
         </Button>
-        <Button onClick={toggleMic}>
+        <Button onClick={toggleMic} className="text-foreground">
           {mic ? <MicIcon /> : <MicDisabledIcon />}
         </Button>
-        <Button onClick={leaveRoom}>
+        <Button onClick={leaveRoom} className="text-foreground">
           <LeaveIcon />
         </Button>
       </div>

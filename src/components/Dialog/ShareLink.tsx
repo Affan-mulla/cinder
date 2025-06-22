@@ -19,12 +19,12 @@ export function DialogCloseButton({link} : {link : string}) {
   return (
     <Dialog >
       <DialogTrigger asChild>
-        <Button  className="bg-violet-700 hover:bg-violet-800"><UserPlus/>Invite</Button>
+        <Button  className="text-foreground cursor-pointer" variant="default"><UserPlus/>Invite</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md bg-neutral-950 text-white">
+      <DialogContent className="sm:max-w-md bg-background text-foreground">
         <DialogHeader>
-          <DialogTitle>Share link</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="font-heading">Share link</DialogTitle>
+          <DialogDescription className="font-body">
             Anyone who has this link will be able join the room.
           </DialogDescription>
         </DialogHeader>
@@ -37,14 +37,13 @@ export function DialogCloseButton({link} : {link : string}) {
               id="link"
               defaultValue={url}
               readOnly
-              className=" selection:bg-violet-700"
-              
+              className=" selection:bg-primary selection:text-white  text-white"
             />
           </div>
         </div>
         <DialogFooter className="sm:justify-start">
           <DialogClose asChild>
-            <Button type="button" variant="secondary" onClick={()=> navigator.clipboard.writeText(url)}>
+            <Button type="button" variant="default" className="text-foreground" onClick={()=> navigator.clipboard.writeText(url)}>
               Copy
             </Button>
           </DialogClose>

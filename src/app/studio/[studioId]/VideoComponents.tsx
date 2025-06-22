@@ -1,34 +1,33 @@
+"use client";
+
+import VideoTile from "@/components/Livekit/CustomVideo";
 import Buttons from "@/components/VideoRoom/Buttons";
 import {
-  GridLayout,
   LiveKitRoom,
   useTracks,
-  VideoTrack,
-  usePagination,
   AudioTrack,
 } from "@livekit/components-react";
 import { Track } from "livekit-client";
 import React from "react";
+
 const RoomRenderer = () => {
   const videoTracks = useTracks([Track.Source.Camera]);
-  const audioTrack = useTracks([Track.Source.Microphone]);
-  const pagination = usePagination(3, videoTracks);
+  const audioTracks = useTracks([Track.Source.Microphone]);
 
   return (
     <>
-      <GridLayout
-        tracks={pagination.tracks}
-        className="grid auto-rows-auto gap-2 bg-neutral-800 items-center p-2 rounded-2xl overflow-hidden h-full w-full"
+      <div
+        className="grid auto-rows-auto gap-4 bg-muted border border-border items-center p-4 rounded-xl overflow-hidden h-full w-full"
         style={{
-          gridTemplateColumns: `repeat(auto-fit, minmax(200px, 1fr))`,
+          gridTemplateColumns: `repeat(auto-fit, minmax(250px, 1fr))`,
         }}
       >
-        <VideoTrack
-          className="rounded-2xl border-4 border-violet-600 object-cover max-w-[50rem] w-full h-full"
-          muted={false}
-        />
-      </GridLayout>
-      {audioTrack.map((track, i) => (
+        {videoTracks.map((trackRef, i) => (
+          <VideoTile trackRef={trackRef} key={i} />
+        ))}
+      </div>
+
+      {audioTracks.map((track, i) => (
         <AudioTrack trackRef={track} key={i} className="hidden" muted={false} />
       ))}
     </>

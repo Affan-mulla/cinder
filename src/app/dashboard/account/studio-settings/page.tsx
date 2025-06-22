@@ -1,8 +1,11 @@
+import { ModeToggle } from '@/components/Theme/ThemeToggle'
 import React from 'react'
 
 const page = () => {
   return (
-    <div className='text-white'>page</div>
+    <div className='text-white'>
+      <ModeToggle />
+    </div>
   )
 }
 

@@ -16,7 +16,7 @@ export default function DashboardLayout({
   useEffect(() => {
     const loadData = async () => {
       try {
-        const result = await axios.get("/api/get-studio");
+        const result = await axios.get("/api/get-user");
         console.log("User data fetched:", result.data);
         
         const user = result?.data?.[0];
@@ -41,7 +41,7 @@ export default function DashboardLayout({
     <StoreLoader />
   ) : (
     <>
-      <div className="flex bg-neutral-900">
+      <div className="flex bg-background from-foreground min-h-screen ">
         <Sidebar />
         {children}
       </div>

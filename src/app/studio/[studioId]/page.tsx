@@ -1,5 +1,5 @@
 "use client";
-
+import {Card, CardContent} from "@/components/ui/card";
 import { getToken } from "@/actions/getToken";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import VideoSession from "./VideoSession";
 import axios from "axios";
+import StoreLoader from "@/components/Loader/StoreLoader";
 
 type StudioDetails = {
   id: string;
@@ -33,7 +34,9 @@ const Page = () => {
   const [token, setToken] = useState("");
 
   const [isHost, setIsHost] = useState(false);
-  const [studioDetails, setStudioDetails] = useState<StudioDetails | null>(null);
+  const [studioDetails, setStudioDetails] = useState<StudioDetails | null>(
+    null
+  );
 
   const [isCheckingHost, setIsCheckingHost] = useState(true);
   const [isFetchingStudio, setIsFetchingStudio] = useState(false);
@@ -118,9 +121,7 @@ const Page = () => {
   // Show loading screen for guests until studio details are fetched
   if (guestRoom && (isCheckingHost || isFetchingStudio)) {
     return (
-      <div className="flex h-screen items-center justify-center bg-neutral-900 text-white">
-        <Loader className="size-10 animate-spin text-white" />
-      </div>
+      <StoreLoader />
     );
   }
 
@@ -129,41 +130,52 @@ const Page = () => {
     return <VideoSession token={token} roomId={roomId} isHost={isHost} />;
   }
   console.log("Studio Details:", studioDetails);
-  
 
   return (
-    <div className="flex h-screen flex-col p-2 bg-neutral-900 text-white">
+    <div className="flex h-screen flex-col p-2 bg-background text-foreground">
       {/* Header */}
-      <div className="w-full flex items-center p-2 gap-2 text-xl">
-        <Link href="/dashboard/home" className="p-1 rounded-lg hover:bg-neutral-800">
+      <div className="w-full flex items-center p-2 gap-2 text-xl ">
+        <Link
+          href="/dashboard/home"
+          className="p-1 rounded-lg hover:bg-foreground hover:text-accent transition-colors"
+        >
           <ChevronLeft className="size-7" />
         </Link>
-        <div className="flex gap-1 items-center">
-          <FlameKindling className="size-7" />
-          <h1>Cinder</h1>
+        <div className="flex text-3xl items-center h-full">
+          <p>&#128293;</p>
+          <h1 className="font-heading align-text-bottom h-full">Cinder</h1>
         </div>
         <div className="flex items-center">
-          <Tally1 className="size-7" />
-          <h1>{user?.name || studioDetails?.profile?.name}'s Studio</h1>
+          <Tally1 className="size-9" />
+          <h1 className="font-heading font-stretch-50%">
+            {user?.name || studioDetails?.profile?.name}'s Studio
+          </h1>
         </div>
       </div>
-
       {/* Join Form */}
+      
       <div className="flex-1 flex justify-center items-center w-full">
-        <div className="bg-neutral-800 max-w-[30rem] w-full p-4 rounded-2xl">
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-            <h1 className="text-3xl font-bold">Enter your name to continue...</h1>
-            <Input
-              placeholder="Enter your name"
-              {...register("name", { required: true })}
-              className="text-black"
-            />
-            {errors.name && <p className="text-red-500">Name is required</p>}
-            <Button type="submit" disabled={isJoining}>
-              {isJoining ? "Joining..." : "Join"}
-            </Button>
-          </form>
-        </div>
+        <Card className="bg-card max-w-[30rem] w-full py-6 rounded-2xl">
+          <CardContent>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex flex-col gap-4"
+            >
+              <h1 className="text-3xl font-heading w-full text-center mb-2">
+                Enter your name to continue...
+              </h1>
+              <Input
+                placeholder="Enter your name"
+                {...register("name", { required: true })}
+                className="font-body text-lg font-medium w-full"
+              />
+              {errors.name && <p className="text-red-500">Name is required</p>}
+              <Button type="submit" disabled={isJoining} className="w-full text-foreground font-heading text-lg font-light cursor-pointer">
+                {isJoining ? "Joining..." : "Join"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

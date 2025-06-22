@@ -7,16 +7,17 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { page } from "../util/data";
 import LinkBtn from "@/components/Sidebar/linkBtn";
 import { UserButton, useUser } from "@clerk/nextjs";
 import useUserStore from "@/store/store";
+import Link from "next/link";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = React.useState(true);
   const params = usePathname();
-  const {user} = useUserStore()
+  const { user } = useUserStore();
   return (
     <motion.div
       animate={{
@@ -32,12 +33,12 @@ const Sidebar = () => {
           <div
             className={`${
               isOpen === false ? "justify-center" : ""
-            } flex items-center justify-between mb-4`}
+            } flex items-center justify-between mt-2 mb-6`}
           >
             <AnimatePresence>
               {isOpen ? (
                 <motion.div
-                  className="flex items-center gap-2 w-full"
+                  
                   transition={{
                     duration: 0.2,
                   }}
@@ -45,10 +46,12 @@ const Sidebar = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0 }}
                 >
-                  <FlameIcon className=" text-neutral-300" />
-                  <h3 className="text-neutral-300 font-bold text-2xl">
-                    Cinder
-                  </h3>
+                  <Link href="/dashboard/home" className="flex items-baseline-last  w-full accent-accent text-2xl">
+                    <p>&#128293;</p>
+                    <h3 className=" font-bold font-heading align-text-bottom ">
+                      Cinder
+                    </h3>
+                  </Link>
                 </motion.div>
               ) : null}
             </AnimatePresence>
@@ -56,27 +59,23 @@ const Sidebar = () => {
             <motion.button
               onClick={() => setIsOpen(!isOpen)}
               whileTap={{ y: 1 }}
-              className="p-1.5 rounded-full hover:bg-neutral-800"
+              className="p-1.5 rounded-full hover:bg-accent-foreground hover:text-background cursor-pointer transition-colors duration-200"
             >
               {isOpen ? (
-                <PanelRightOpen
-                  className="text-neutral-300 "
-                  strokeWidth={1.5}
-                />
+                <PanelRightOpen strokeWidth={1.9} />
               ) : (
-                <PanelRightClose
-                  className="text-neutral-300"
-                  strokeWidth={1.5}
-                />
+                <PanelRightClose strokeWidth={1.9} />
               )}
             </motion.button>
           </div>
-          <motion.div className="flex flex-col gap-2">
+          <motion.div className="flex flex-col gap-2 font-body font-light">
             {page.map((item, index) => (
               <LinkBtn
                 key={index}
                 name={item.name}
-                link={item.name === "Studio" ? `/studio/${user.slug}` : item.href}
+                link={
+                  item.name === "Studio" ? `/studio/${user.slug}` : item.href
+                }
                 params={params}
                 Icon={item.icon}
                 index={index}
