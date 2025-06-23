@@ -17,7 +17,6 @@ export default function DashboardLayout({
     const loadData = async () => {
       try {
         const result = await axios.get("/api/get-user");
-        console.log("User data fetched:", result.data);
         
         const user = result?.data?.[0];
         if (result?.status === 200 && user) {

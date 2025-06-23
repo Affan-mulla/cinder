@@ -143,7 +143,7 @@ const Page = () => {
         </Link>
         <div className="flex text-3xl items-center h-full">
           <p>&#128293;</p>
-          <h1 className="font-heading align-text-bottom h-full">Cinder</h1>
+          <h1 className="font-heading align-text-bottom h-fit">Cinder</h1>
         </div>
         <div className="flex items-center">
           <Tally1 className="size-9" />

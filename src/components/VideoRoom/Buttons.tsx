@@ -19,8 +19,8 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
   const router = useRouter();
   const user = useUserStore.getState().user;
 
-  const [camera, setCamera] = useState(room.localParticipant.isCameraEnabled);
-  const [mic, setMic] = useState(room.localParticipant.isMicrophoneEnabled);
+  const [camera, setCamera] = useState(true);
+  const [mic, setMic] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
   let session_id = "";
   let participant_id = "";
@@ -32,10 +32,6 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
     room.localParticipant.setCameraEnabled(newState);
     setCamera(newState);
   };
-
-  if(!camera){ 
-   
-  }
   const toggleMic = () => {
     const newState = !room.localParticipant.isMicrophoneEnabled;
     room.localParticipant.setMicrophoneEnabled(newState);
@@ -184,8 +180,8 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
   }, [isRecording]);
 
   return (
-    <div className="h-[5rem] w-full absolute bottom-0 p-2 flex justify-center">
-      <div className="flex justify-center items-center gap-2 bg-background border border-border rounded-2xl px-5 w-fit ">
+    <div className="h-[5rem] w-full absolute -bottom-3 z-100 p-2 flex justify-center">
+      <div className="flex justify-center items-center gap-2 bg-background/80 border border-border rounded-2xl px-5 w-fit ">
         {user.id && (
           <Button
             onClick={() => {

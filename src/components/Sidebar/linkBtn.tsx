@@ -22,7 +22,7 @@ const LinkBtn = ({name,link,params,Icon,index,isOpen, className, onclick} : Prop
       href={link}
       className={`${className} flex items-center gap-3 text-lg font-semibold font-body  ${
         isOpen == false ? "p-0 justify-center " : " px-4"
-      } py-2 rounded-lg hover:bg-foreground/70 transition-colors duration-200 hover:text-accent w-full ${
+      } py-2 rounded-md hover:bg-foreground/70 transition-colors duration-200 hover:text-accent w-full ${
         params === link ? "bg-foreground text-accent" : "text-foreground"
       }`}
     >
