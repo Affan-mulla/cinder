@@ -34,8 +34,7 @@ const VideoSession = ({ token, roomId, isHost }: { token: string; roomId: string
               },
             }));
           }
-        }
-        else {
+        } else {
           const res = await axios.post("/api/session/update", {
             title,
             sessionId: user.session_id,
@@ -63,7 +62,7 @@ const VideoSession = ({ token, roomId, isHost }: { token: string; roomId: string
         useUserStore.setState((state) => ({
           user: {
             ...state.user,
-            session_id: "",
+            session_id: '',
           },
         }));
       }

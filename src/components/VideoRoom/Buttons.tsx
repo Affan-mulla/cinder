@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, use } from "react";
 import { Button } from "../ui/button";
 import { Play } from "lucide-react";
 import {
@@ -57,31 +57,36 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
     console.log("Adding participant...");
     const res = await axios.post("/api/participant", {
       sessionId,
-    })
+    });
     console.log(res);
-    
+
     if (res.status === 200) {
       participant_id = res.data.data?.id || "";
-    };
+    }
   };
 
-  const createRecording = async(data : any) => {
+  const createRecording = async (data: any) => {
     console.log("createRecording");
-    
-    const {secure_url : fileUrl,duration} = data;
-    if(!fileUrl || !duration || !participant_id || !session_id) return console.warn({fileUrl,duration,participant_id,session_id});
+
+    const { secure_url: fileUrl, duration } = data;
+    if (!fileUrl || !duration || !participant_id || !session_id)
+      return console.warn({ fileUrl, duration, participant_id, session_id });
 
     const res = await axios.post("/api/recording", {
       fileUrl,
       participant_id,
       session_id,
-      duration
-    })
-    if(res.status === 200){
-      console.log(res.data);
+      duration,
+    });
+    if (res.status === 200) {
+      useUserStore.setState((state) => ({
+        user: {
+          ...state.user,
+          session_id: "",
+        },
+      }));
     }
-
-  }
+  };
 
   const startLocalRecording = async () => {
     if (isRecording) return;
@@ -130,13 +135,14 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
 
     recorder.start();
   };
+  
 
   const disconnectAndRedirect = () => {
     console.log("Disconnecting from room...");
     if (mediaRecorderRef.current?.state === "recording") {
       mediaRecorderRef.current.stop();
-    } else{
-      if (user.id) delSession();
+    } else {
+       delSession();
     }
     room.disconnect();
     router.push("/dashboard/home");

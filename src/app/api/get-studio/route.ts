@@ -1,12 +1,8 @@
 import { prisma } from "@/lib/prismaClient";
-
-// app/api/[id]/route.ts
 export async function GET(req: Request) {
   const studioId = new URL(req.url).searchParams.get("id");
   console.log("Requested ID:", studioId);
-
   try {
-
     const res = await prisma.studio.findUnique({
       where: { 
         slug : studioId || undefined

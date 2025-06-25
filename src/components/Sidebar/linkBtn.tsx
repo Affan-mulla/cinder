@@ -22,8 +22,8 @@ const LinkBtn = ({name,link,params,Icon,index,isOpen, className, onclick} : Prop
       href={link}
       className={`${className} flex items-center gap-3 text-lg font-semibold font-body  ${
         isOpen == false ? "p-0 justify-center " : " px-4"
-      } py-2 rounded-md hover:bg-foreground/70 transition-colors duration-200 hover:text-accent w-full ${
-        params === link ? "bg-foreground text-accent" : "text-foreground"
+      } py-2 rounded-md hover:bg-primary/70 transition-colors duration-200 w-full ${
+        params === link ? "bg-primary " : "text-foreground"
       }`}
     >
       <Icon width={24} height={24} />
