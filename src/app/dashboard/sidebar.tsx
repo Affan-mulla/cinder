@@ -8,7 +8,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { page } from "../util/data";
+import { page } from "../../util/data";
 import LinkBtn from "@/components/Sidebar/linkBtn";
 import { UserButton, useUser } from "@clerk/nextjs";
 import useUserStore from "@/store/store";
