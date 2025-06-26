@@ -2,7 +2,7 @@
 
 import React, { useRef, useState, useEffect, use } from "react";
 import { Button } from "../ui/button";
-import { Play } from "lucide-react";
+import { Circle, CircleDot, Pause, Play } from "lucide-react";
 import {
   CameraDisabledIcon,
   CameraIcon,
@@ -22,6 +22,8 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
   const [camera, setCamera] = useState(true);
   const [mic, setMic] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+
   let session_id = "";
   let participant_id = "";
   const chunks = useRef<Blob[]>([]);
@@ -122,10 +124,10 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
 
       try {
         const result = await uploadToCloudinary(file);
-        if(result){
+        if (result) {
           console.log("result");
-          
-          createRecording(result)
+
+          createRecording(result);
         }
         console.log("Cloudinary URL:", result);
       } catch (err) {
@@ -135,14 +137,13 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
 
     recorder.start();
   };
-  
 
   const disconnectAndRedirect = () => {
     console.log("Disconnecting from room...");
     if (mediaRecorderRef.current?.state === "recording") {
       mediaRecorderRef.current.stop();
     } else {
-       delSession();
+      delSession();
     }
     room.disconnect();
     router.push("/dashboard/home");
@@ -155,6 +156,30 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
       );
     }
     disconnectAndRedirect();
+  };
+
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (isRecording) {
+      intervalRef.current = setInterval(() => {
+        setRecordingTime((prev) => prev + 1);
+      }, 1000);
+    } else {
+      setRecordingTime(0);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    }
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [isRecording]);
+
+  // Format seconds to mm:ss
+  const formatTime = (seconds: number) => {
+    const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
+    const secs = String(seconds % 60).padStart(2, "0");
+    return `${mins}:${secs}`;
   };
 
   useEffect(() => {
@@ -186,7 +211,7 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
   }, [isRecording]);
 
   return (
-    <div className="h-[5rem] w-full absolute -bottom-3 z-100 p-2 flex justify-center">
+    <div className="h-[5rem] w-full absolute -bottom-3 z-100 p-2 flex justify-center gap-2 ">
       <div className="flex justify-center items-center gap-2 bg-background/80 border border-border rounded-2xl px-5 w-fit ">
         {user.id && (
           <Button
@@ -210,6 +235,14 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
           <LeaveIcon />
         </Button>
       </div>
+      {isRecording && (
+        <div className="flex justify-center items-center gap-2 bg-background/80 border border-border rounded-2xl px-5 w-fit ">
+          <div className="  text-white px-4 py-2 rounded-full flex items-center gap-2">
+            <CircleDot className="animate-pulse text-red-500" />
+            <span className="ml-2 font-body text-lg">{formatTime(recordingTime)}</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
