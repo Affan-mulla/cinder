@@ -11,6 +11,7 @@ import axios from "axios";
 const VideoSession = ({ token, roomId, isHost }: { token: string; roomId: string; isHost: boolean }) => {
   const [title, setTitle] = useState("");
   const user = useUserStore((s) => s.user);
+  const setUser = useUserStore((s) => s.setUser);
   const hasCreatedRef = useRef(false);
 
   useEffect(() => {
@@ -19,28 +20,36 @@ const VideoSession = ({ token, roomId, isHost }: { token: string; roomId: string
     async function sessionCreate() {
       try {
         console.log("Creating session with title:", title);
-        
-        if(user.session_id === '' || user.session_id === null || user.session_id === undefined || !user.session_id) {
-          const res = await axios.post("/api/session/create", {
-            title,
-            hostId: user.id,
-          });
-          if (res.status === 200) {
-            console.log("Session created successfully:", res.data);
-            useUserStore.setState((state) => ({
-              user: {
-                ...state.user,
-                session_id: res.data.data.id,
-              },
-            }));
-          }
-        } else {
-          const res = await axios.post("/api/session/update", {
-            title,
-            sessionId: user.session_id,
-          });
-          if (res.status === 200) {
-            console.log("Session updated successfully:", res.data);
+
+        if (isHost) {
+          if (
+            user.session_id === "" ||
+            user.session_id === null ||
+            user.session_id === undefined ||
+            !user.session_id
+          ) {
+            const res = await axios.post("/api/session/create", {
+              title,
+              hostId: user.id,
+              studioId: user.studio_id,
+            });
+            if (res.status === 200) {
+              console.log("Session created successfully:", res.data);
+              useUserStore.setState((state) => ({
+                user: {
+                  ...state.user,
+                  session_id: res.data.data.id,
+                },
+              }));
+            }
+          } else {
+            const res = await axios.post("/api/session/update", {
+              title,
+              sessionId: user.session_id,
+            });
+            if (res.status === 200) {
+              console.log("Session updated successfully:", res.data);
+            }
           }
         }
       } catch (error) {
@@ -62,7 +71,7 @@ const VideoSession = ({ token, roomId, isHost }: { token: string; roomId: string
         useUserStore.setState((state) => ({
           user: {
             ...state.user,
-            session_id: '',
+            session_id: "",
           },
         }));
       }

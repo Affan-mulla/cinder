@@ -18,7 +18,9 @@ export default function DashboardLayout({
       try {
         const result = await axios.get("/api/get-user");
         
-        const user = result?.data?.[0];
+        const user = result?.data?.data;
+        console.log(user);
+        
         if (result?.status === 200 && user) {
           setUser({
             id: user.id,
@@ -26,7 +28,9 @@ export default function DashboardLayout({
             email: user.email,
             avatar_url: user.avatar_url,
             slug: user.slug,
-            session_id: ""});
+            session_id: "",
+            studio_id : user.studioId
+          });
         }
       } catch (err: any) {
       } finally {

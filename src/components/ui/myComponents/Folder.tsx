@@ -18,7 +18,7 @@ import {
 
 const Folder = () => {
   return (
-    <div className="bg-card border border-border rounded-2xl p-3 w-[320px] flex flex-col gap-4 shadow-md">
+    <div className="bg-secondary border border-border rounded-2xl p-3 h-fit w-full max-w-md  flex flex-col gap-4 shadow-md">
       <Link href="">
         <div className="rounded-xl relative overflow-hidden w-full aspect-video hover:opacity-90 transition">
           <Image

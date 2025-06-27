@@ -24,9 +24,11 @@ model session {
   createdAt    DateTime      @default(now())
   endedAt      DateTime?
   host_id   String
+  studio_id   String
   participants participant[]
   recordings   recording[]
   host         profile       @relation(fields: [host_id], references: [id])
+  studio       studio        @relation(fields: [studio_id], references: [id])
 
   @@index([host_id])
 }
@@ -63,4 +65,5 @@ model studio {
   logo_url  String?
   createdAt DateTime @default(now())
   profile   profile  @relation(fields: [user_id], references: [id], map: "studio_userId_fkey")
+  sessions  session[]
 }

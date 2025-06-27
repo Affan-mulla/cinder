@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prismaClient";
 
 export async function POST(req : Request) {
     try {
-        const { title, hostId} = await req.json();
+        const { title, hostId, studioId } = await req.json();
         console.log("Creating session with title:", title, "and hostId:", hostId);
         if (!hostId) {
             return new Response(
@@ -18,6 +18,7 @@ export async function POST(req : Request) {
             data: {
                 title : title || "Untitled Session",
                 host_id: hostId,
+                studio_id: studioId
             },
         });
         if (res) {
