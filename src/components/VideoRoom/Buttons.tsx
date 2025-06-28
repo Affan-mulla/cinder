@@ -58,6 +58,7 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
     if (!sessionId) return console.warn("Session id not found");
     console.log("Adding participant...");
     const res = await axios.post("/api/participant", {
+      name : room.localParticipant.identity,
       sessionId,
     });
     console.log(res);

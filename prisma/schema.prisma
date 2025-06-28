@@ -35,6 +35,7 @@ model session {
 
 model participant {
   id         String      @id @default(cuid())
+  name       String
   session_id  String
   joinedAt   DateTime    @default(now())
   leftAt     DateTime?
@@ -49,7 +50,7 @@ model recording {
   session_id     String
   participant_id String
   fileUrl       String
-  duration      Int
+  duration      Float
   createdAt     DateTime    @default(now())
   participant   participant @relation(fields: [participant_id], references: [id])
   session       session     @relation(fields: [session_id], references: [id])

@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prismaClient";
 
 export async function POST(req: Request) {
     try {
-        const {sessionId} = await req.json();
+        const {sessionId,name} = await req.json();
         if (!sessionId) {
             return new Response(JSON.stringify({
                 status: 400,
@@ -13,6 +13,7 @@ export async function POST(req: Request) {
         const res = await prisma.participant.create({
             data: {
                 session_id: sessionId,
+                name: name || "Anonymous", // Default name, can be changed later
             },
         });
         if(!res) {
