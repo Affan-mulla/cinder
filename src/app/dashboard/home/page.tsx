@@ -33,9 +33,7 @@ const Home = () => {
               <h1 className="font-heading text-2xl mb-2">Recent</h1>
               <div className="flex gap-2">
                
-              <Folder />
-              <Folder />
-              <Folder />
+             
               </div>
             </div>
           </div>

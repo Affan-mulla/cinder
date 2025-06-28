@@ -17,11 +17,13 @@ export async function GET(req: Request) {
                 participants:{
                     select: {
                         id: true,
+                        name: true,
                         recordings : {
                             select: {
                                 id: true,
                                 fileUrl: true,
                                 createdAt: true,
+                                duration: true
                             }
                         }
                     }

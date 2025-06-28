@@ -39,7 +39,7 @@ model participant {
   session_id  String
   joinedAt   DateTime    @default(now())
   leftAt     DateTime?
-  session    session     @relation(fields: [session_id], references: [id])
+  session    session     @relation(fields: [session_id], references: [id],onDelete: Cascade)
   recordings recording[]
 
   @@index([session_id])
@@ -52,8 +52,8 @@ model recording {
   fileUrl       String
   duration      Float
   createdAt     DateTime    @default(now())
-  participant   participant @relation(fields: [participant_id], references: [id])
-  session       session     @relation(fields: [session_id], references: [id])
+  participant   participant @relation(fields: [participant_id], references: [id], onDelete: Cascade)
+  session       session     @relation(fields: [session_id], references: [id], onDelete: Cascade)
 
   @@index([session_id])
   @@index([participant_id])

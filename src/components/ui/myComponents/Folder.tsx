@@ -1,6 +1,7 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { FolderOpen, Trash2, Ellipsis } from "lucide-react";
 import { Button } from "../button";
@@ -15,11 +16,84 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import axios from "axios";
 
-const Folder = () => {
+type Recording = {
+  id: string;
+  fileUrl: string;
+  createdAt: string;
+  duration: number;
+};
+
+type Participant = {
+  id: string;
+  name: string;
+  recordings: Recording[];
+};
+
+type Project = {
+  id: string;
+  title: string;
+  createdAt: string;
+  endedAt: string | null;
+  host_id: string;
+  studio_id: string;
+  participants: Participant[];
+};
+
+type Projects = Project[];
+
+const Folder = ({ projectProp }: { projectProp: Project }) => {
+  const [project, setProject] = React.useState<Project>({
+    id: "",
+    title: "",
+    createdAt: "",
+    endedAt: null,
+    host_id: "",
+    studio_id: "",
+    participants: [],
+  });
+
+  useEffect(() => {
+    setProject({
+      id: projectProp.id,
+      title: projectProp.title,
+      createdAt: projectProp.createdAt,
+      endedAt: projectProp.endedAt,
+      host_id: projectProp.host_id,
+      studio_id: projectProp.studio_id,
+      participants: projectProp.participants,
+    });
+  }, [projectProp]);
+
+  const deleteProject = async () => {
+    try {
+      const response = await axios.delete(`/api/projects/delete`, {
+        data: {
+          projectId: project.id,
+        },
+      });
+      if (response.status === 200) {
+        console.log("Project deleted successfully");
+      } else {
+        console.error("Failed to delete project:", response.data);
+      }
+    } catch (error) {
+      console.error("Error deleting project:", error);
+    }
+  };
+
+    const names = project.participants.map((p) => p.name).join(" & ");
+    const rawDuration = project.participants[0]?.recordings[0]?.duration || 0;
+    const formattedDuration = `00:${String(Math.floor(rawDuration)).padStart(
+      2,
+      "0"
+    )}`;
+  
+
   return (
-    <div className="bg-secondary border border-border rounded-2xl p-3 h-fit w-full max-w-md  flex flex-col gap-4 shadow-md">
-      <Link href="">
+    <div className="bg-secondary border border-border rounded-2xl p-3 h-fit w-full max-w-md flex flex-col gap-4 shadow-md">
+      <Link href={`/dashboard/projects/${project.id}`}>
         <div className="rounded-xl relative overflow-hidden w-full aspect-video hover:opacity-90 transition">
           <Image
             src="/goingmerry.png"
@@ -28,10 +102,9 @@ const Folder = () => {
             height={180}
             className="object-cover w-full h-full"
           />
-
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-2">
             <h2 className="text-foreground font-heading text-sm px-2 py-1/2 bg-secondary/80 rounded-xl w-fit">
-              00:30
+              {formattedDuration}
             </h2>
           </div>
         </div>
@@ -39,8 +112,12 @@ const Folder = () => {
 
       <div className="flex justify-between items-start">
         <div className="flex flex-col gap-0.5">
-          <h1 className="font-heading text-lg text-foreground">Affan</h1>
-          <p className="text-xs text-muted-foreground">June 28</p>
+          <h1 className="font-heading text-lg text-foreground">
+            {names || "Unknown"}
+          </h1>
+          <p className="text-xs text-muted-foreground">
+            {new Date(project.createdAt).toLocaleDateString()}
+          </p>
         </div>
 
         <Popover>
@@ -51,7 +128,7 @@ const Folder = () => {
           </PopoverTrigger>
 
           <PopoverContent side="right" className="w-44 p-2 space-y-1">
-            <Link href="/dashboard/projects/affan">
+            <Link href={`/dashboard/projects/${project.id}`}>
               <Button
                 variant="ghost"
                 className="w-full text-sm font-medium justify-start"
@@ -81,7 +158,10 @@ const Folder = () => {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction className="bg-destructive text-white">
+                  <AlertDialogAction
+                    className="bg-destructive text-foreground hover:bg-destructive/90 cursor-pointer"
+                    onClick={deleteProject}
+                  >
                     Continue
                   </AlertDialogAction>
                 </AlertDialogFooter>

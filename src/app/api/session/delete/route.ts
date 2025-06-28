@@ -24,6 +24,7 @@ export async function  DELETE(req : Request) {
             });
         }
     } catch (error) {
+        console.error("Error deleting session:", error);
         return new Response(JSON.stringify({ error: "Failed to delete session" }), {
             status: 500,
         });
