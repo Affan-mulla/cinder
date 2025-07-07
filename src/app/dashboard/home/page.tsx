@@ -1,5 +1,6 @@
 import Folder from "@/components/ui/myComponents/Folder";
 import HomeButton from "@/components/ui/myComponents/HomeButton";
+import ProjectsDisplay from "@/components/ui/myComponents/ProjectsDisplay";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { studio } from "@/util/data";
 import { Ellipsis } from "lucide-react";
@@ -31,10 +32,7 @@ const Home = () => {
           <div className="w-full h-full mt-auto rounded-xl bg-accent p-4">
             <div className="h-full w-full">
               <h1 className="font-heading text-2xl mb-2">Recent</h1>
-              <div className="flex gap-2">
-               
-             
-              </div>
+               <ProjectsDisplay />
             </div>
           </div>
         </div>

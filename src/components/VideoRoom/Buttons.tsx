@@ -128,7 +128,7 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
         if (result) {
           console.log("result");
 
-          createRecording(result);
+          await createRecording(result);
         }
         console.log("Cloudinary URL:", result);
       } catch (err) {

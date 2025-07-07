@@ -43,7 +43,7 @@ type Project = {
 
 type Projects = Project[];
 
-const Folder = ({ projectProp }: { projectProp: Project }) => {
+const Folder = ({ projectProp, deleteProject }: { projectProp: Project, deleteProject: (id : string) => void }) => {
   const [project, setProject] = React.useState<Project>({
     id: "",
     title: "",
@@ -66,29 +66,21 @@ const Folder = ({ projectProp }: { projectProp: Project }) => {
     });
   }, [projectProp]);
 
-  const deleteProject = async () => {
-    try {
-      const response = await axios.delete(`/api/projects/delete`, {
-        data: {
-          projectId: project.id,
-        },
-      });
-      if (response.status === 200) {
-        console.log("Project deleted successfully");
-      } else {
-        console.error("Failed to delete project:", response.data);
-      }
-    } catch (error) {
-      console.error("Error deleting project:", error);
-    }
-  };
+  
 
-    const names = project.participants.map((p) => p.name).join(" & ");
+    
     const rawDuration = project.participants[0]?.recordings[0]?.duration || 0;
     const formattedDuration = `00:${String(Math.floor(rawDuration)).padStart(
       2,
       "0"
     )}`;
+
+    if (project.title === "Untitled Session") {
+      setProject((prev) => ({
+        ...prev,
+        title:project.participants.map((p) => p.name).join(" & "),
+      }));
+    }
   
 
   return (
@@ -113,7 +105,7 @@ const Folder = ({ projectProp }: { projectProp: Project }) => {
       <div className="flex justify-between items-start">
         <div className="flex flex-col gap-0.5">
           <h1 className="font-heading text-lg text-foreground">
-            {names || "Unknown"}
+            {project.title || "Untitled recording"}
           </h1>
           <p className="text-xs text-muted-foreground">
             {new Date(project.createdAt).toLocaleDateString()}
@@ -160,7 +152,7 @@ const Folder = ({ projectProp }: { projectProp: Project }) => {
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction
                     className="bg-destructive text-foreground hover:bg-destructive/90 cursor-pointer"
-                    onClick={deleteProject}
+                    onClick={() => deleteProject(project.id)}
                   >
                     Continue
                   </AlertDialogAction>

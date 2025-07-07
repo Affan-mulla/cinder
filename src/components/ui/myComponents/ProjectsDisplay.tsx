@@ -9,13 +9,31 @@ const ProjectsDisplay = () => {
   const user = useUserStore((g) => g.user);
   const [isLoading, setIsLoading] = React.useState(true);
   const [projects, setProjects] = React.useState([]);
+  
+  const deleteProject = async (id : string) => {
+    try {
+      const response = await axios.delete(`/api/projects/delete`, {
+        data: {
+          projectId: id,
+        },
+      });
+      if (response.status === 200) {
+        await fetchProjects(); 
+        console.log("Project deleted successfully");
+      } else {
+        console.error("Failed to delete project:", response.data);
+      }
+    } catch (error) {
+      console.error("Error deleting project:", error);
+    }
+  };
 
   const fetchProjects = async () => {
     try {
-      const result = await axios.get("/api/projects", {
+      setIsLoading(true);
+      const result = await axios.get("/api/projects/all-projects", {
         params: { studioId: user.studio_id },
       });
-      console.log("Projects fetched successfully:");
       setProjects(result.data.data);
     } catch (error) {
       console.log("Error in display projects :", error);
@@ -43,8 +61,6 @@ const ProjectsDisplay = () => {
         ))}
       </div>
     );
-
-    console.log("Projects:", projects);
     
   return (
     <div className="relative flex-1">
@@ -53,7 +69,7 @@ const ProjectsDisplay = () => {
         style={{ gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))" }}
       >
         {projects.length > 0 && projects ? (
-          projects.map((project, index) => <Folder key={index} projectProp={project} />)
+          projects.map((project, index) => <Folder key={index} projectProp={project} deleteProject={deleteProject} />)
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
             <h1 className="font-heading text-3xl">No projects available.</h1>

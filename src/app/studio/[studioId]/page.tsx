@@ -28,7 +28,7 @@ const Page = () => {
   const user = useUserStore((s) => s.user);
   const { studioId } = useParams<{ studioId: string }>();
   const searchParams = useSearchParams();
-
+  const [title , setTitle] = useState("")
   const guestRoom = searchParams.get("t");
   const [roomId, setRoomId] = useState("");
   const [token, setToken] = useState("");
@@ -46,7 +46,7 @@ const Page = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ defaultValues: { name: "" } });
+  } = useForm({ defaultValues: { name: "",sessionName : "" } });
 
   // Assign room if guest
   useEffect(() => {
@@ -101,6 +101,7 @@ const Page = () => {
       setIsJoining(true);
       let finalRoomId = roomId || Math.random().toString(36).substring(2, 10);
       setRoomId(finalRoomId);
+      setTitle(data.sessionName)
 
       const tokenRes = await getToken({
         identity: data.name,
@@ -127,7 +128,7 @@ const Page = () => {
 
   // Show session if joined
   if (token) {
-    return <VideoSession token={token} roomId={roomId} isHost={isHost} />;
+    return <VideoSession token={token} roomId={roomId} isHost={isHost} titleProp={title} />;
   }
   console.log("Studio Details:", studioDetails);
 
@@ -167,6 +168,11 @@ const Page = () => {
               <Input
                 placeholder="Enter your name"
                 {...register("name", { required: true })}
+                className="font-body text-lg font-medium w-full"
+              />
+              <Input
+                placeholder="Enter Session Name"
+                {...register("sessionName", { required: true })}
                 className="font-body text-lg font-medium w-full"
               />
               {errors.name && <p className="text-red-500">Name is required</p>}

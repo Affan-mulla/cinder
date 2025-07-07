@@ -8,8 +8,8 @@ import useUserStore from "@/store/store";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import axios from "axios";
 
-const VideoSession = ({ token, roomId, isHost }: { token: string; roomId: string; isHost: boolean }) => {
-  const [title, setTitle] = useState("");
+const VideoSession = ({ token, roomId, isHost,titleProp }: { token: string; roomId: string; isHost: boolean, titleProp : string }) => {
+  const [title, setTitle] = useState(titleProp || "");
   const user = useUserStore((s) => s.user);
   const setUser = useUserStore((s) => s.setUser);
   const hasCreatedRef = useRef(false);
