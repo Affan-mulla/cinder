@@ -18,7 +18,7 @@ const ProjectsDisplay = ({
       }}
     >
       {isLoading ? (
-        Array.from({ length: 6 }).map((_, i) => <SkeletonBox key={i} />)
+        Array.from({ length: 3 }).map((_, i) => <SkeletonBox key={i} />)
       ) : projects?.length > 0 ? (
         projects.map((project, index) => (
           <Folder key={index} projectProp={project} />

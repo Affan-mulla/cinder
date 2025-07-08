@@ -1,14 +1,35 @@
-import Folder from "@/components/ui/myComponents/Folder";
+"use client";
 import HomeButton from "@/components/ui/myComponents/HomeButton";
 import ProjectsDisplay from "@/components/ui/myComponents/ProjectsDisplay";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import SkeletonBox from "@/components/ui/SkeletonBox";
+import useUserStore from "@/store/store";
 import { studio } from "@/util/data";
-import { Ellipsis } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
+import axios from "axios";
+import React, { useEffect } from "react";
 
 const Home = () => {
+  const [projects, setProjects] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const user = useUserStore((g) => g.user);
+
+  useEffect(()=>{
+    const fetchProjects = async () => {
+      try {
+        setIsLoading(true);
+        const res = await axios.get("/api/projects/all-projects",{
+          params: { studioId: user.studio_id },
+        });
+        setProjects(res.data.data);
+      } catch (error) {
+        console.error("Error fetching all projects:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchProjects();
+  },[])
+
   return (
     <div className="py-2 pr-2 h-screen w-full flex-1">
       <div className="h-full w-full rounded-2xl border border-border bg-card shadow-md">
@@ -29,10 +50,12 @@ const Home = () => {
             ))}
           </div>
 
-          <div className="w-full h-full mt-auto rounded-xl bg-accent p-4">
+          <div className="w-full h-full mt-auto rounded-xl bg-background p-4 border border-border">
             <div className="h-full w-full">
               <h1 className="font-heading text-2xl mb-2">Recent</h1>
-               <ProjectsDisplay />
+              <div className="relative flex-1">
+                <ProjectsDisplay isLoading={isLoading} projects={projects} />
+              </div>
             </div>
           </div>
         </div>

@@ -22,7 +22,7 @@ export const page = [
 export const studio = [
     {
         name: 'Record',
-        href: '/dashboard/studio/home',
+        href: '/dashboard/home',
         icon : CircleDot
     },
     {
