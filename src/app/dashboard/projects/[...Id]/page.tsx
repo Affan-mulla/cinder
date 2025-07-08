@@ -13,6 +13,9 @@ import ProjectVideo from "@/components/ui/myComponents/ProjectVideo";
 const Page = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [project, setProject] = useState<Project | null>(null);
+  
+ 
+  
 
   const getProjectDetails = async (id: string) => {
     try {

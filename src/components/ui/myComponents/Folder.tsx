@@ -17,6 +17,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import axios from "axios";
+import { toast } from "sonner";
 
 type Recording = {
   id: string;
@@ -43,7 +44,7 @@ type Project = {
 
 type Projects = Project[];
 
-const Folder = ({ projectProp, deleteProject }: { projectProp: Project, deleteProject: (id : string) => void }) => {
+const Folder = ({ projectProp}: { projectProp: Project }) => {
   const [project, setProject] = React.useState<Project>({
     id: "",
     title: "",
@@ -66,7 +67,23 @@ const Folder = ({ projectProp, deleteProject }: { projectProp: Project, deletePr
     });
   }, [projectProp]);
 
-  
+  const deleteProject = async (id : string) => {
+    try {
+      const response = await axios.delete(`/api/projects/delete`, {
+        data: {
+          projectId: id,
+        },
+      });
+      if (response.status === 200) {
+        console.log("Project deleted successfully");
+        toast.success("Project deleted successfully");
+      } else {
+        console.error("Failed to delete project:", response.data);
+      }
+    } catch (error) {
+      console.error("Error deleting project:", error);
+    }
+  };
 
     
     const rawDuration = project.participants[0]?.recordings[0]?.duration || 0;
