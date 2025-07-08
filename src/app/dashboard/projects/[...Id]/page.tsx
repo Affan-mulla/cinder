@@ -9,6 +9,7 @@ import SkeletonBox from "@/components/ui/SkeletonBox";
 import { Project } from "@/util/types";
 import Folder from "@/components/ui/myComponents/Folder";
 import ProjectVideo from "@/components/ui/myComponents/ProjectVideo";
+import DownloadBtn from "@/components/ui/myComponents/DownloadBtn";
 
 const Page = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -86,6 +87,7 @@ const Page = () => {
                     <ProjectVideo
                       key={`${index}-${rIndex}`}
                       link={recording.fileUrl}
+                      durationProp={recording.duration}
                     />
                   ))
                 ))
@@ -95,10 +97,7 @@ const Page = () => {
             <div className="flex flex-col gap-4 w-full">
               <div className="flex items-center justify-between">
                 <h3 className="font-heading text-xl">Tracks</h3>
-                <Button variant="secondary">
-                  <Download className="mr-2 h-4 w-4" />
-                  Download All
-                </Button>
+                <DownloadBtn link={project.participants[0].recordings[0].fileUrl} text={"Download All"} />
               </div>
 
               <div className="flex flex-col gap-2 w-full">

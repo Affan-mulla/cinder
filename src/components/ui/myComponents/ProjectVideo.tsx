@@ -1,12 +1,13 @@
 import React, { useRef, useState } from "react";
 import { Play, Pause, Volume2 } from "lucide-react";
 
-const ProjectVideo = ({ link }: { link: string }) => {
+const ProjectVideo = ({ link, durationProp }: { link: string, durationProp: number }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const [duration, setDuration] = useState(durationProp || 0);
+  
 
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
@@ -42,12 +43,6 @@ const ProjectVideo = ({ link }: { link: string }) => {
     }
   };
 
-  const handleLoadedMetadata = () => {
-    const video = videoRef.current;
-    if (video) {
-      setDuration(video.duration); 
-    }
-  };
 
   return (
     <div className="relative w-full max-w-3xl overflow-hidden rounded-xl group">
@@ -55,7 +50,6 @@ const ProjectVideo = ({ link }: { link: string }) => {
         ref={videoRef}
         src={link}
         onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
         className="w-full h-auto bg-black"
       />
 

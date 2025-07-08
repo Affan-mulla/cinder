@@ -2,6 +2,7 @@ import { Download, UsersRound } from "lucide-react";
 import React from "react";
 import { Button } from "../button";
 import { Participant, Recording } from "@/util/types";
+import DownloadBtn from "./DownloadBtn";
 
 const TrackItem = ({
   participant,
@@ -38,10 +39,7 @@ const TrackItem = ({
         </div>
       </div>
 
-      <Button variant="default" className="gap-2 text-foreground">
-        <Download className="h-4 w-4" />
-        Download
-      </Button>
+      <DownloadBtn link={recordings.fileUrl} text="Download" />
     </div>
   );
 };
