@@ -10,17 +10,17 @@ export default function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const setUser = useUserStore((s) => s.setUser)
+  const setUser = useUserStore((s) => s.setUser);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
       try {
         const result = await axios.get("/api/get-user");
-        
+
         const user = result?.data?.data;
         console.log(user);
-        
+
         if (result?.status === 200 && user) {
           setUser({
             id: user.id,
@@ -29,7 +29,7 @@ export default function DashboardLayout({
             avatar_url: user.avatar_url,
             slug: user.slug,
             session_id: "",
-            studio_id : user.studioId
+            studio_id: user.studioId,
           });
         }
       } catch (err: any) {
@@ -46,7 +46,9 @@ export default function DashboardLayout({
     <>
       <div className="flex bg-background from-foreground min-h-screen ">
         <Sidebar />
-        {children}
+        <div className="flex-1">
+          {children}
+        </div>
       </div>
     </>
   );

@@ -28,7 +28,7 @@ const Sidebar = () => {
       }}
       className={` h-screen  transition-width duration-300`}
     >
-      <div className=" p-4 flex justify-between h-full flex-col ">
+      <div className=" p-4 flex justify-between h-full flex-col w-full ">
         <div className="h-fit w-full ">
           <div
             className={`${
@@ -91,7 +91,7 @@ const Sidebar = () => {
         >
           <LinkBtn
             name="Settings"
-            link="/dashboard/account/studio-settings"
+            link="/dashboard/account/settings"
             params={params}
             Icon={Settings}
             index={0}
