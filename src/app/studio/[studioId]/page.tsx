@@ -1,5 +1,5 @@
 "use client";
-import {Card, CardContent} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { getToken } from "@/actions/getToken";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +19,7 @@ type StudioDetails = {
     name: string | null;
   };
   studio_name: string;
+  sessions: [{ title: string }];
   slug: string;
   user_id: string;
   logo_url: string | null;
@@ -29,7 +30,7 @@ const Page = () => {
   const user = useUserStore((s) => s.user);
   const { studioId } = useParams<{ studioId: string }>();
   const searchParams = useSearchParams();
-  const [title , setTitle] = useState("")
+  const [title, setTitle] = useState("");
   const guestRoom = searchParams.get("t");
   const [roomId, setRoomId] = useState("");
   const [token, setToken] = useState("");
@@ -47,7 +48,16 @@ const Page = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ defaultValues: { name: "",sessionName : "" } });
+    reset,
+  } = useForm({ defaultValues: { name: "", sessionName: "" } });
+
+  useEffect(() => {
+    if (studioDetails?.sessions?.[0]?.title) {
+      reset({
+        sessionName: studioDetails.sessions[0].title || "",
+      });
+    }
+  }, [studioDetails, reset]);
 
   // Assign room if guest
   useEffect(() => {
@@ -102,7 +112,7 @@ const Page = () => {
       setIsJoining(true);
       let finalRoomId = roomId || Math.random().toString(36).substring(2, 10);
       setRoomId(finalRoomId);
-      setTitle(data.sessionName)
+      setTitle(data.sessionName);
 
       const tokenRes = await getToken({
         identity: data.name,
@@ -122,16 +132,20 @@ const Page = () => {
 
   // Show loading screen for guests until studio details are fetched
   if (guestRoom && (isCheckingHost || isFetchingStudio)) {
-    return (
-      <StoreLoader />
-    );
+    return <StoreLoader />;
   }
 
   // Show session if joined
   if (token) {
-    return <VideoSession token={token} roomId={roomId} isHost={isHost} titleProp={title} />;
+    return (
+      <VideoSession
+        token={token}
+        roomId={roomId}
+        isHost={isHost}
+        titleProp={title}
+      />
+    );
   }
-  console.log("Studio Details:", studioDetails);
 
   return (
     <div className="flex h-screen flex-col p-2 bg-background text-foreground">
@@ -155,7 +169,7 @@ const Page = () => {
         </div>
       </div>
       {/* Join Form */}
-      
+
       <div className="flex-1 flex justify-center items-center w-full">
         <Card className="bg-card max-w-[30rem] w-full py-6 rounded-2xl">
           <CardContent>
@@ -171,18 +185,20 @@ const Page = () => {
                 {...register("name", { required: true })}
                 className="font-body text-lg font-medium w-full"
               />
-             
-                  <Input
-                    placeholder="Enter session name"
-                    {...register("sessionName", { required: isHost })}
-                    className="font-body text-lg font-medium w-full"
-                    defaultValue={studioDetails?.studio_name}
-                    disabled={isHost}
-                  />
-                
-              
+
+              <Input
+                placeholder="Enter session name"
+                {...register("sessionName", { required: isHost })}
+                className="font-body text-lg font-medium w-full"
+                disabled={!isHost}
+              />
+
               {errors.name && <p className="text-red-500">Name is required</p>}
-              <Button type="submit" disabled={isJoining} className="w-full text-foreground font-heading text-lg font-light cursor-pointer">
+              <Button
+                type="submit"
+                disabled={isJoining}
+                className="w-full text-foreground font-heading text-lg font-light cursor-pointer"
+              >
                 {isJoining ? "Joining..." : "Join"}
               </Button>
             </form>

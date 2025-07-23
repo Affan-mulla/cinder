@@ -44,6 +44,7 @@ export async function GET(req: Request) {
       { status: 200 }
     );
   } catch (error) {
+    console.error("Error fetching projects:", error);
     return new Response(
       JSON.stringify({
         error: "An error occurred while processing your request.",

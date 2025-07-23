@@ -1,22 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { BreadcrumbWithCustomSeparator } from "@/components/ui/myComponents/BreadcrumbsFile";
-import { Download } from "lucide-react";
 import TrackItem from "@/components/ui/myComponents/TrackItem";
 import axios from "axios";
 import SkeletonBox from "@/components/ui/SkeletonBox";
 import { Project } from "@/util/types";
-import Folder from "@/components/ui/myComponents/Folder";
 import ProjectVideo from "@/components/ui/myComponents/ProjectVideo";
 import DownloadBtn from "@/components/ui/myComponents/DownloadBtn";
 
 const Page = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [project, setProject] = useState<Project | null>(null);
-  
- 
-  
 
   const getProjectDetails = async (id: string) => {
     try {
@@ -59,7 +53,9 @@ const Page = () => {
     return <div className="p-4 text-muted-foreground">Project not found.</div>;
   }
 
-  console.log(project.participants.map((p) => p.recordings.map((r) => r.fileUrl)).flat().join(","));
+  let recordings  = project.participants.flatMap((participant) => participant.recordings);
+  let links = recordings.map((recording) => recording.fileUrl);
+  
   
 
   return (
@@ -100,7 +96,7 @@ const Page = () => {
             <div className="flex flex-col gap-4 w-full">
               <div className="flex items-center justify-between">
                 <h3 className="font-heading text-xl">Tracks</h3>
-                <DownloadBtn link={project.participants[0].recordings[0].fileUrl} text={"Download All"} />
+                <DownloadBtn link={links} text={"Download All"} />
               </div>
 
               <div className="flex flex-col gap-2 w-full">

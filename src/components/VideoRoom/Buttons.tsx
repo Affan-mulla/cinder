@@ -23,6 +23,7 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
   const [mic, setMic] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
 
   let session_id = "";
   let participant_id = "";
@@ -58,7 +59,7 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
     if (!sessionId) return console.warn("Session id not found");
     console.log("Adding participant...");
     const res = await axios.post("/api/participant", {
-      name : room.localParticipant.identity,
+      name: room.localParticipant.identity,
       sessionId,
     });
     console.log(res);
@@ -75,12 +76,17 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
     if (!fileUrl || !duration || !participant_id || !session_id)
       return console.warn({ fileUrl, duration, participant_id, session_id });
 
+    if (user.id) {
+      await axios.put("/api/session/state", { sessionId: user.session_id });
+    }
+
     const res = await axios.post("/api/recording", {
       fileUrl,
       participant_id,
       session_id,
       duration,
     });
+
     if (res.status === 200) {
       useUserStore.setState((state) => ({
         user: {
@@ -88,6 +94,7 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
           session_id: "",
         },
       }));
+      router.push("/dashboard/home");
     }
   };
 
@@ -129,6 +136,9 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
           console.log("result");
 
           await createRecording(result);
+          room.disconnect();
+          setIsUploading(false);
+          router.push("/dashboard/home");
         }
         console.log("Cloudinary URL:", result);
       } catch (err) {
@@ -142,12 +152,13 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
   const disconnectAndRedirect = () => {
     console.log("Disconnecting from room...");
     if (mediaRecorderRef.current?.state === "recording") {
-      mediaRecorderRef.current.stop();
+      setIsUploading(true); // Show loader
+      mediaRecorderRef.current.stop(); // onstop handles the rest
     } else {
       delSession();
+      room.disconnect();
+      router.push("/dashboard/home");
     }
-    room.disconnect();
-    router.push("/dashboard/home");
   };
 
   const leaveRoom = async () => {
@@ -211,6 +222,17 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
     };
   }, [isRecording]);
 
+  if (isUploading) {
+    return (
+      <div className="fixed inset-0 z-[9999] bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p className="text-lg font-medium text-foreground">
+          Uploading video, please wait...
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="h-[5rem] w-full absolute -bottom-3 z-100 p-2 flex justify-center gap-2 ">
       <div className="flex justify-center items-center gap-2 bg-background/80 border border-border rounded-2xl px-5 w-fit ">
@@ -238,9 +260,11 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
       </div>
       {isRecording && (
         <div className="flex justify-center items-center gap-2 bg-background/80 border border-border rounded-2xl px-5 w-fit ">
-          <div className="  text-white px-4 py-2 rounded-full flex items-center gap-2">
+          <div className="  text-fo px-4 py-2 rounded-full flex items-center gap-2">
             <CircleDot className="animate-pulse text-red-500" />
-            <span className="ml-2 font-body text-lg">{formatTime(recordingTime)}</span>
+            <span className="ml-2 font-body text-lg">
+              {formatTime(recordingTime)}
+            </span>
           </div>
         </div>
       )}

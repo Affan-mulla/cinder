@@ -88,7 +88,7 @@ const VideoSession = ({ token, roomId, isHost,titleProp }: { token: string; room
             <div className="flex items-center gap-3">
               <Input
                 placeholder="Untitled Recording"
-                className="text-xl font-bold w-[300px]  text-white"
+                className="text-xl font-bold w-[300px]  text-foreground"
                 disabled={!isHost}
                 defaultValue={title}
                 onBlur={(e) => {

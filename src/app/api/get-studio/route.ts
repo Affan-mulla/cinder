@@ -14,6 +14,9 @@ export async function GET(req: Request) {
           }
         },
         sessions : {
+          where : {
+            isLive : true
+          },
           select : {
             title : true
           }

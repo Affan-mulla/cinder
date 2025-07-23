@@ -23,6 +23,7 @@ model session {
   title        String
   createdAt    DateTime      @default(now())
   endedAt      DateTime?
+  isLive       Boolean       @default(true)
   host_id      String
   studio_id    String
   participants participant[]
