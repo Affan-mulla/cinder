@@ -31,10 +31,10 @@ const Home = () => {
   },[])
 
   return (
-    <div className="py-2 px-2 h-screen w-full flex-1">
+    <div className="p-4 md:p-2 h-screen w-full flex-1">
       <div className="h-full w-full rounded-2xl border border-border bg-card shadow-md">
         <div className="flex flex-col items-center justify-between h-full px-6 py-10 gap-5">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-10">
+          <div className="flex md:gap-16 gap-6">
             {studio.map(({ name, icon, href }, index) => (
               <HomeButton
                 key={index}
@@ -53,7 +53,7 @@ const Home = () => {
           <div className="w-full h-full mt-auto rounded-xl bg-background p-4 border border-border">
             <div className="h-full w-full">
               <h1 className="font-heading text-2xl mb-2">Recent</h1>
-              <div className="relative flex-1">
+              <div className="relative flex-1 ">
                 <ProjectsDisplay isLoading={isLoading} projects={projects} />
               </div>
             </div>

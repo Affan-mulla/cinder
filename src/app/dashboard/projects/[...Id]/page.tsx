@@ -52,18 +52,15 @@ const Page = () => {
   if (!project) {
     return <div className="p-4 text-muted-foreground">Project not found.</div>;
   }
-
-  let recordings  = project.participants.flatMap((participant) => participant.recordings);
-  let links = recordings.map((recording) => recording.fileUrl);
   
   
 
   return (
-    <div className="h-screen w-full py-2 px-2 flex-1">
+    <div className="h-full  max-h-screen w-full py-2 px-2 flex-1">
       <div className="h-full w-full rounded-2xl border border-border bg-card shadow-md p-4 flex flex-col gap-4">
         <BreadcrumbWithCustomSeparator id={project.id} name={project.title} />
 
-        <div className="flex flex-col gap-4 p-5 h-full w-full bg-accent rounded-xl border border-border">
+        <div className="flex flex-col gap-4 p-5 h-full w-full bg-accent rounded-xl border border-border overflow-scroll scroll-smooth">
           <h1 className="font-heading text-2xl">Recordings</h1>
 
           <div className="flex flex-col gap-2 w-full">
@@ -94,9 +91,9 @@ const Page = () => {
             </div>
 
             <div className="flex flex-col gap-4 w-full">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center">
                 <h3 className="font-heading text-xl">Tracks</h3>
-                <DownloadBtn link={links} text={"Download All"} />
+                
               </div>
 
               <div className="flex flex-col gap-2 w-full">

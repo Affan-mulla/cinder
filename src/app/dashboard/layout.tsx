@@ -46,9 +46,10 @@ export default function DashboardLayout({
     <>
       <div className="flex bg-background from-foreground min-h-screen ">
         <Sidebar />
-        <div className="flex-1">
+        <div className="flex-1 max-h-screen overflow-scroll scroll-smooth">
           {children}
         </div>
+        
       </div>
     </>
   );

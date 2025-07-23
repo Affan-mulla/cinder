@@ -1,6 +1,5 @@
-import { Download, UsersRound } from "lucide-react";
+import { UsersRound } from "lucide-react";
 import React from "react";
-import { Button } from "../button";
 import { Participant, Recording } from "@/util/types";
 import DownloadBtn from "./DownloadBtn";
 
@@ -13,7 +12,9 @@ const TrackItem = ({
 }) => {
   if (!participant || !recordings) {
     return (
-      <div className="text-muted-foreground">Participant or recording missing</div>
+      <div className="text-muted-foreground">
+        Participant or recording missing
+      </div>
     );
   }
 
@@ -23,23 +24,27 @@ const TrackItem = ({
     .substr(11, 8);
 
   return (
-    <div className="flex items-center justify-between bg-background p-3 rounded-xl border border-border">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-background p-4 rounded-xl border border-border gap-4">
       <div className="flex items-center gap-4">
-        <div className="bg-secondary p-3 rounded-xl">
-          <UsersRound className="text-primary" />
+        <div className="bg-secondary p-3 rounded-xl shrink-0">
+          <UsersRound className="text-primary w-6 h-6" />
         </div>
 
-        <div>
-          <h4 className="text-lg font-heading">{participant.name || "Unnamed"}</h4>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground font-body">
+        <div className="flex flex-col">
+          <h4 className="text-base sm:text-lg font-heading">
+            {participant.name || "Unnamed"}
+          </h4>
+          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground font-body">
             <span>{formattedDuration}</span>
-            <span>•</span>
+            <span className="hidden sm:inline">•</span>
             <span>Max 1080p</span>
           </div>
         </div>
       </div>
 
-      <DownloadBtn link={recordings.fileUrl} text="Download" />
+      <div className="self-end sm:self-center">
+        <DownloadBtn link={recordings.fileUrl} text="Download" />
+      </div>
     </div>
   );
 };
