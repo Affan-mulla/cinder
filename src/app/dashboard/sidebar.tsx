@@ -13,6 +13,7 @@ import LinkBtn from "@/components/Sidebar/linkBtn";
 import { UserButton, useUser } from "@clerk/nextjs";
 import useUserStore from "@/store/store";
 import Link from "next/link";
+import { ModeToggle } from "@/components/Theme/ThemeToggle";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = React.useState(true);
@@ -28,7 +29,7 @@ const Sidebar = () => {
       }}
       className={` h-screen  transition-width duration-300`}
     >
-      <div className=" p-4 flex justify-between h-full flex-col w-full ">
+      <div className=" p-4 flex justify-between h-full flex-col w-full border-r border-border shadow-right shadow-md">
         <div className="h-fit w-full ">
           <div
             className={`${
@@ -98,7 +99,7 @@ const Sidebar = () => {
             isOpen={isOpen}
           />
           <div className={`${isOpen ? "ml-3" : ""}`}>
-            <UserButton />
+            <ModeToggle />
           </div>
         </div>
       </div>

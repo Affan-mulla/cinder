@@ -38,6 +38,7 @@ export async function onAuthenticateUser() {
 
             const createStudio = await prisma.studio.create({
                 data: {
+                    studio_name : createUser.name+" Studio",
                     slug : createUser.name.toLowerCase().replace(/\s+/g, '-').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '')+"-studio-"+Math.random().toString(36).substring(2,7),
                     user_id : user.id,
                     logo_url : createUser.avatar_url || null,

@@ -8,6 +8,7 @@ type UserData = {
   avatar_url: string | null;
   slug: string;
   studioId: string;
+  studio_name: string
 };
 export async function GET(req: Request) {
   try {
@@ -30,6 +31,7 @@ export async function GET(req: Request) {
           select: {
             id: true,
             slug: true,
+            studio_name: true
           },
         },
       },
@@ -50,7 +52,8 @@ export async function GET(req: Request) {
         email : userDetails.email,
         avatar_url : userDetails.avatar_url,
         slug : userDetails?.studio?.slug,
-        studioId : userDetails?.studio?.id
+        studioId : userDetails?.studio?.id,
+        studio_name : userDetails?.studio?.studio_name
     }
 
     

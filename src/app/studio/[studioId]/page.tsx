@@ -18,6 +18,7 @@ type StudioDetails = {
   profile: {
     name: string | null;
   };
+  studio_name: string;
   slug: string;
   user_id: string;
   logo_url: string | null;
@@ -170,11 +171,16 @@ const Page = () => {
                 {...register("name", { required: true })}
                 className="font-body text-lg font-medium w-full"
               />
-              <Input
-                placeholder="Enter Session Name"
-                {...register("sessionName", { required: true })}
-                className="font-body text-lg font-medium w-full"
-              />
+             
+                  <Input
+                    placeholder="Enter session name"
+                    {...register("sessionName", { required: isHost })}
+                    className="font-body text-lg font-medium w-full"
+                    defaultValue={studioDetails?.studio_name}
+                    disabled={isHost}
+                  />
+                
+              
               {errors.name && <p className="text-red-500">Name is required</p>}
               <Button type="submit" disabled={isJoining} className="w-full text-foreground font-heading text-lg font-light cursor-pointer">
                 {isJoining ? "Joining..." : "Join"}

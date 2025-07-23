@@ -9,13 +9,13 @@ datasource db {
 }
 
 model profile {
-  id           String        @id @unique
-  name         String
-  email        String        @unique
-  avatar_url   String?
-  createdAt    DateTime      @default(now())
-  sessions     session[]
-  studio       studio?
+  id         String    @id @unique
+  name       String
+  email      String    @unique
+  avatar_url String?
+  createdAt  DateTime  @default(now())
+  sessions   session[]
+  studio     studio?
 }
 
 model session {
@@ -23,11 +23,11 @@ model session {
   title        String
   createdAt    DateTime      @default(now())
   endedAt      DateTime?
-  host_id   String
-  studio_id   String
+  host_id      String
+  studio_id    String
   participants participant[]
   recordings   recording[]
-  host         profile       @relation(fields: [host_id], references: [id])
+  host         profile       @relation(fields: [host_id], references: [id], onDelete: Cascade)
   studio       studio        @relation(fields: [studio_id], references: [id])
 
   @@index([host_id])
@@ -36,35 +36,36 @@ model session {
 model participant {
   id         String      @id @default(cuid())
   name       String
-  session_id  String
+  session_id String
   joinedAt   DateTime    @default(now())
   leftAt     DateTime?
-  session    session     @relation(fields: [session_id], references: [id],onDelete: Cascade)
+  session    session     @relation(fields: [session_id], references: [id], onDelete: Cascade)
   recordings recording[]
 
   @@index([session_id])
 }
 
 model recording {
-  id            String      @id @default(cuid())
+  id             String      @id @default(cuid())
   session_id     String
   participant_id String
-  fileUrl       String
-  duration      Float
-  createdAt     DateTime    @default(now())
-  participant   participant @relation(fields: [participant_id], references: [id], onDelete: Cascade)
-  session       session     @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  fileUrl        String
+  duration       Float
+  createdAt      DateTime    @default(now())
+  participant    participant @relation(fields: [participant_id], references: [id], onDelete: Cascade)
+  session        session     @relation(fields: [session_id], references: [id], onDelete: Cascade)
 
   @@index([session_id])
   @@index([participant_id])
 }
 
 model studio {
-  id        String   @id @default(cuid())
-  user_id   String   @unique(map: "studio_userId_key")
-  slug      String   @unique
-  logo_url  String?
-  createdAt DateTime @default(now())
-  profile   profile  @relation(fields: [user_id], references: [id], map: "studio_userId_fkey")
-  sessions  session[]
+  id          String    @id @default(cuid())
+  user_id     String    @unique(map: "studio_userId_key")
+  studio_name String?
+  slug        String    @unique
+  logo_url    String?
+  createdAt   DateTime  @default(now())
+  profile     profile     @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "studio_userId_fkey")
+  sessions    session[]
 }

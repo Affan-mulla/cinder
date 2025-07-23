@@ -23,7 +23,7 @@ const LinkBtn = ({name,link,params,Icon,index,isOpen, className, onclick} : Prop
       className={`${className} flex items-center gap-3 text-lg font-semibold font-body  ${
         isOpen == false ? "p-0 justify-center " : " px-4"
       } py-2 rounded-md hover:bg-primary/70 transition-colors duration-200 w-full ${
-        params.includes(link) ? "bg-primary " : "text-foreground"
+        params.includes(link) ? "bg-primary text-white" : "text-foreground"
       }`}
     >
       <Icon width={24} height={24} />

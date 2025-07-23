@@ -59,22 +59,25 @@ const Page = () => {
     return <div className="p-4 text-muted-foreground">Project not found.</div>;
   }
 
+  console.log(project.participants.map((p) => p.recordings.map((r) => r.fileUrl)).flat().join(","));
+  
+
   return (
-    <div className="h-screen w-full py-2 pr-2 flex-1">
+    <div className="h-screen w-full py-2 px-2 flex-1">
       <div className="h-full w-full rounded-2xl border border-border bg-card shadow-md p-4 flex flex-col gap-4">
         <BreadcrumbWithCustomSeparator id={project.id} name={project.title} />
 
-        <div className="flex flex-col gap-4 p-5 h-full w-full bg-accent rounded-xl">
+        <div className="flex flex-col gap-4 p-5 h-full w-full bg-accent rounded-xl border border-border">
           <h1 className="font-heading text-2xl">Recordings</h1>
 
           <div className="flex flex-col gap-2 w-full">
             <div className="flex items-center justify-between">
-              <h2 className="font-heading text-3xl hover:border-b w-fit">
+              <h2 className="font-heading text-3xl w-fit">
                 {project.title || "Untitled"}
               </h2>
-              <Button variant="secondary" className="px-6">
+              {/* <Button variant="secondary" className="px-6">
                 Share
-              </Button>
+              </Button> */}
             </div>
 
             {/* Folder Placeholder */}

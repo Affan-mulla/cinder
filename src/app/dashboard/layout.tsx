@@ -30,6 +30,7 @@ export default function DashboardLayout({
             slug: user.slug,
             session_id: "",
             studio_id: user.studioId,
+            studio_name: user.studio_name,
           });
         }
       } catch (err: any) {

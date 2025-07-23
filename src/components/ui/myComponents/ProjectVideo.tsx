@@ -45,7 +45,7 @@ const ProjectVideo = ({ link, durationProp }: { link: string, durationProp: numb
 
 
   return (
-    <div className="relative w-full max-w-3xl overflow-hidden rounded-xl group">
+    <div className="relative w-full max-w-3xl overflow-hidden rounded-xl group  ">
       <video
         ref={videoRef}
         src={link}

@@ -12,6 +12,11 @@ export async function GET(req: Request) {
           select: {
             name: true,
           }
+        },
+        sessions : {
+          select : {
+            title : true
+          }
         }
        }
     });

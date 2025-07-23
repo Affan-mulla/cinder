@@ -49,7 +49,7 @@ const Page = () => {
   }, [debouncedSearch, user.studio_id]);
 
   return (
-    <div className="py-2 pr-2 h-screen w-full flex-1">
+    <div className="py-2 px-2 h-screen w-full flex-1">
       <div className="h-full w-full rounded-2xl border border-border bg-card shadow-md p-3 flex flex-col gap-2">
         <div className="flex items-center justify-between p-4">
           <h1 className="font-heading text-2xl">Projects</h1>

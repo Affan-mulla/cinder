@@ -9,6 +9,7 @@ type UserInfo = {
   slug: string
   session_id: string
   studio_id : string
+  studio_name : string
 }
 
 interface UserState {
@@ -26,7 +27,8 @@ const defaultUser: UserInfo = {
   avatar_url: null,
   slug: '',
   session_id: '',
-  studio_id : ''
+  studio_id : '',
+  studio_name : '',
 }
 
 const useUserStore = create<UserState>()(

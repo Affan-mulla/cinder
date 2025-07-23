@@ -23,7 +23,7 @@ const TrackItem = ({
     .substr(11, 8);
 
   return (
-    <div className="flex items-center justify-between bg-background p-3 rounded-xl">
+    <div className="flex items-center justify-between bg-background p-3 rounded-xl border border-border">
       <div className="flex items-center gap-4">
         <div className="bg-secondary p-3 rounded-xl">
           <UsersRound className="text-primary" />
