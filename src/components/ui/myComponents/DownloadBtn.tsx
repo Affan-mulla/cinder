@@ -6,9 +6,6 @@ const DownloadBtn = ({ link, text }: { link: string[] | string; text: string }) 
     ? link
     : link.split(',').map((url) => url.trim());
 
-    console.log(normalizedLinks);
-    
-
   const download = () => {
     normalizedLinks.forEach((l, i) => {
       const a = document.createElement("a");

@@ -57,12 +57,10 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
   const addParticipant = async ({ sessionId }: { sessionId: string }) => {
     session_id = sessionId;
     if (!sessionId) return console.warn("Session id not found");
-    console.log("Adding participant...");
     const res = await axios.post("/api/participant", {
       name: room.localParticipant.identity,
       sessionId,
     });
-    console.log(res);
 
     if (res.status === 200) {
       participant_id = res.data.data?.id || "";
@@ -70,7 +68,6 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
   };
 
   const createRecording = async (data: any) => {
-    console.log("createRecording");
 
     const { secure_url: fileUrl, duration } = data;
     if (!fileUrl || !duration || !participant_id || !session_id)
@@ -100,8 +97,6 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
 
   const startLocalRecording = async () => {
     if (isRecording) return;
-
-    console.log("Starting local recording...");
     setIsRecording(true);
     if (user.id) {
       // Send session ID to remote participants
@@ -133,14 +128,13 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
       try {
         const result = await uploadToCloudinary(file);
         if (result) {
-          console.log("result");
 
           await createRecording(result);
           room.disconnect();
           setIsUploading(false);
           router.push("/dashboard/home");
         }
-        console.log("Cloudinary URL:", result);
+        
       } catch (err) {
         console.error("Upload failed", err);
       }
@@ -150,7 +144,6 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
   };
 
   const disconnectAndRedirect = () => {
-    console.log("Disconnecting from room...");
     if (mediaRecorderRef.current?.state === "recording") {
       setIsUploading(true); // Show loader
       mediaRecorderRef.current.stop(); // onstop handles the rest
@@ -201,7 +194,6 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
 
       if (message.startsWith("session-id:")) {
         remoteSessionId = message.split("session-id:")[1];
-        console.log("Received session ID:", remoteSessionId);
         // Call addParticipant with received session ID
         addParticipant({ sessionId: remoteSessionId });
       }
@@ -211,7 +203,7 @@ const Buttons = ({ delSession }: { delSession: () => void }) => {
       }
 
       if (message === "end-call") {
-        console.log("Received end-call message");
+       
         disconnectAndRedirect();
       }
     };

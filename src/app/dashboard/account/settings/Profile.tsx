@@ -43,13 +43,11 @@ const Profile = ({ user }: any) => {
     try {
       setIsLoading(true);
       const avatar = await uploadImage();
-      console.log(avatar);
+
       
       data.avatar_url = avatar?.data.url;
       const res = await axios.put("/api/settings", data);
-      console.log(res);
     } catch (error) {
-      console.log(error);
     } finally {
       setIsLoading(false);
     }

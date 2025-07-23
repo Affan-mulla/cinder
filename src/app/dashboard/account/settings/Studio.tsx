@@ -8,13 +8,13 @@ const Studio = ({ studioName, id }: { studioName: string, id : string }) => {
   const handleStudioName = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
       if (e.target.value.length > 0 && e.target.value !== studioName) {
-        console.log(e.target.value);
+ 
 
         const res = await axios.put("/api/settings/studio", {
           id,
           name: e.target.value,
         });
-        console.log(res);
+
 
         if (res.status === 200) {
           toast.success("Studio name updated successfully");
@@ -22,7 +22,6 @@ const Studio = ({ studioName, id }: { studioName: string, id : string }) => {
       }
     } catch (error) {
       toast.error("Failed to update studio name");
-      console.log(error);
     }
   };
   return (

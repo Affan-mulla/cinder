@@ -29,15 +29,13 @@ export default function DeleteAccountSection() {
       const res = await axios.delete('/api/delete-account', { data: { userId: user?.id } });
       
     } catch (error) {
-      console.log(error);
+     
       
     }
     finally {
       setIsLoading(false);
       useUserStore.setState({ user: undefined });
     }
-
-    console.log('Account deleted')
   }
 
   return (

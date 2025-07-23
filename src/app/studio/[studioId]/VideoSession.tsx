@@ -19,7 +19,6 @@ const VideoSession = ({ token, roomId, isHost,titleProp }: { token: string; room
     hasCreatedRef.current = true;
     async function sessionCreate() {
       try {
-        console.log("Creating session with title:", title);
 
         if (isHost) {
           if (
@@ -34,7 +33,6 @@ const VideoSession = ({ token, roomId, isHost,titleProp }: { token: string; room
               studioId: user.studio_id,
             });
             if (res.status === 200) {
-              console.log("Session created successfully:", res.data);
               useUserStore.setState((state) => ({
                 user: {
                   ...state.user,
@@ -47,9 +45,7 @@ const VideoSession = ({ token, roomId, isHost,titleProp }: { token: string; room
               title,
               sessionId: user.session_id,
             });
-            if (res.status === 200) {
-              console.log("Session updated successfully:", res.data);
-            }
+            
           }
         }
       } catch (error) {
@@ -67,7 +63,6 @@ const VideoSession = ({ token, roomId, isHost,titleProp }: { token: string; room
         },
       });
       if (res.status === 200) {
-        console.log("Session deleted successfully:", res.data);
         useUserStore.setState((state) => ({
           user: {
             ...state.user,

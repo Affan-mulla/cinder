@@ -3,7 +3,6 @@ import { prisma } from "@/lib/prismaClient";
 export async function PUT(req: Request) {
     try {
         const data = await req.json();
-        console.log(data);
 
         if (!data) {
             return new Response(JSON.stringify({ error: "Studio Name is required" }), {

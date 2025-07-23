@@ -11,7 +11,6 @@ export default function StudioRoom({ token }: { token: string }) {
       video={true}
       audio={true}
       onConnected={() => {
-        console.log("Connected to room!");
       }}
       style={{ height: "100vh" }}
     />

@@ -2,8 +2,6 @@ import { prisma } from "@/lib/prismaClient";
 
 export async function GET(request: Request) {
   const id = new URL(request.url).searchParams.get("id");
-  console.log(id);
-  
 
   try {
     if(!id) {
@@ -43,7 +41,6 @@ export async function GET(request: Request) {
     });
     
   } catch (error) {
-    console.log("Error fetching project data:", error);
     
     return new Response(JSON.stringify({ error: "Failed to fetch project data" }), {
       status: 500,

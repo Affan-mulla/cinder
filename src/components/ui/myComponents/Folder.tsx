@@ -75,7 +75,6 @@ const Folder = ({ projectProp}: { projectProp: Project }) => {
         },
       });
       if (response.status === 200) {
-        console.log("Project deleted successfully");
         toast.success("Project deleted successfully");
       } else {
         console.error("Failed to delete project:", response.data);

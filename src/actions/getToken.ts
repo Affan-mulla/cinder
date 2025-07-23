@@ -3,7 +3,7 @@ import { AccessToken } from "livekit-server-sdk";
 export async function getToken({identity, room, isHost}: {identity: string, room: string, isHost: boolean}) : Promise<{token:  string}> {
     try {
         if(isHost) {
-            console.log("host");
+           
             
             const at = new AccessToken(process.env.LIVEKIT_API_KEY, process.env.LIVEKIT_API_SECRET, { identity });
             at.addGrant({
@@ -20,7 +20,7 @@ export async function getToken({identity, room, isHost}: {identity: string, room
             }
             
         } else {
-             console.log("guest");
+           
             const at = new AccessToken(process.env.LIVEKIT_API_KEY, process.env.LIVEKIT_API_SECRET, { identity });
             at.addGrant({
                 roomCreate: false,
@@ -36,7 +36,7 @@ export async function getToken({identity, room, isHost}: {identity: string, room
             };
         }
     } catch (error) {
-       console.log(error);
+       
        return {
         token : ''
        }

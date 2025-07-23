@@ -3,7 +3,6 @@ import { prisma } from "@/lib/prismaClient";
 export async function POST(req : Request) {
     try {
         const { title, sessionId } = await req.json();
-        console.log("Updating session with title:", title, "and sessionId:", sessionId);
         
         if (!title || !sessionId) {
             return new Response(JSON.stringify({ error: "Title and sessionId are required." }), {
