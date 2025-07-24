@@ -62,7 +62,7 @@ const Profile = ({ user }: any) => {
   };
 
   return (
-    <div className="flex-1 flex flex-col p-6 lg:p-10 bg-card rounded-2xl border border-border shadow-md">
+    <div className="sm:flex-1 flex flex-col p-6 lg:p-10 bg-card rounded-2xl border border-border shadow-md">
       {/* Page Header */}
       <div className="mb-8 max-w-3xl">
         <h1 className="text-3xl font-bold font-heading">Profile Settings</h1>

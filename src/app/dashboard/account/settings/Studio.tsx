@@ -25,9 +25,9 @@ const Studio = ({ studioName, id }: { studioName: string, id : string }) => {
     }
   };
   return (
-    <div className="flex-1 flex flex-col p-6 lg:p-10 bg-card rounded-2xl border border-border gap-5  shadow-md">
+    <div className="sm:flex-1 flex flex-col p-6 lg:p-10 bg-card rounded-2xl border border-border gap-5  shadow-md">
       {/* Page Header */}
-      <div className="mb-8 max-w-3xl">
+      <div className="sm:mb-8 mb-2 max-w-3xl">
         <h1 className="text-3xl font-bold font-heading">Studio Settings</h1>
       </div>
 

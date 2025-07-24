@@ -4,6 +4,8 @@ import useUserStore from "@/store/store";
 import { useEffect, useState } from "react";
 import StoreLoader from "@/components/Loader/StoreLoader";
 import axios from "axios";
+import MobileNav from "@/components/ui/myComponents/SidebarMob";
+
 
 export default function DashboardLayout({
   children,
@@ -44,13 +46,13 @@ export default function DashboardLayout({
     <StoreLoader />
   ) : (
     <>
-      <div className="flex bg-background from-foreground min-h-screen ">
+      <div className="flex bg-background from-foreground min-h-screen">
         <Sidebar />
-        <div className="flex-1 max-h-screen overflow-scroll scroll-smooth">
+        <div className="flex-1 max-h-screen overflow-scroll scroll-smooth pb-16 md:pb-0">
           {children}
         </div>
-        
       </div>
+      <MobileNav />
     </>
   );
 }

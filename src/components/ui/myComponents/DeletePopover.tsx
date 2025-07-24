@@ -39,7 +39,7 @@ export default function DeleteAccountSection() {
   }
 
   return (
-    <div className="space-y-3 bg-accent border border-border rounded-2xl shadow-sm max-w-3xl w-full p-6">
+    <div className="space-y-3 bg-accent border border-border rounded-2xl shadow-sm max-w-3xl w-full p-6 mb-14 md:mb-0">
       <h1 className="font-heading text-2xl text-destructive">Dangerous Zone</h1>
       <p className="font-body font-bold">Delete your account</p>
 

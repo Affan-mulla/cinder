@@ -6,10 +6,10 @@ import Profile from "./Profile";
 const Page = () => {
   const user = useUserStore((g) => g.user);
   return (
-   <div className="w-full h-full flex gap-2 p-4 flex-wrap md:flex-row flex-col">
-     <Profile user={user} />
-    <Studio id={user.studio_id} studioName={user.studio_name} />
-   </div>
+    <div className="w-full h-full flex flex-col md:flex-row md:flex-wrap gap-2 p-4">
+      <Profile user={user} />
+      <Studio id={user.studio_id} studioName={user.studio_name} />
+    </div>
   );
 };
 

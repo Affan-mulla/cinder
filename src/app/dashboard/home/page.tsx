@@ -31,9 +31,9 @@ const Home = () => {
   },[])
 
   return (
-    <div className="p-4 md:p-2 h-screen w-full flex-1">
-      <div className="h-full w-full rounded-2xl border border-border bg-card shadow-md">
-        <div className="flex flex-col items-center justify-between h-full px-6 py-10 gap-5">
+    <div className=" md:p-2 h-full w-full flex-1">
+      <div className="h-full w-full sm:rounded-2xl sm:border border-border bg-card shadow-md">
+        <div className="flex flex-col items-center h-full px-6 py-10 gap-5">
           <div className="flex md:gap-16 gap-6">
             {studio.map(({ name, icon, href }, index) => (
               <HomeButton
@@ -50,7 +50,7 @@ const Home = () => {
             ))}
           </div>
 
-          <div className="w-full h-full mt-auto rounded-xl bg-background p-4 border border-border">
+          <div className="w-full sm:h-fit  sm:flex-1 rounded-xl bg-background p-4 border border-border flex">
             <div className="h-full w-full">
               <h1 className="font-heading text-2xl mb-2">Recent</h1>
               <div className="relative flex-1 ">
@@ -63,5 +63,4 @@ const Home = () => {
     </div>
   );
 };
-
 export default Home;

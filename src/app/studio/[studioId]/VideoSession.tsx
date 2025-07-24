@@ -76,14 +76,14 @@ const VideoSession = ({ token, roomId, isHost,titleProp }: { token: string; room
   };
 
   return (
-    <div className="flex h-screen w-full p-4 bg-background">
+    <div className="flex h-screen w-full sm:p-4 bg-background">
       <div className="flex-1 flex flex-col gap-4">
         <Card className="flex-1 bg-secondary shadow-md relative">
-          <CardHeader className="flex justify-between items-center gap-2">
-            <div className="flex items-center gap-3">
+          <CardHeader className="flex justify-between items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-3 flex-wrap ">
               <Input
                 placeholder="Untitled Recording"
-                className="text-xl font-bold w-[300px]  text-foreground"
+                className="text-xl font-bold sm:w-[300px] w-[200px]  text-foreground"
                 disabled={!isHost}
                 defaultValue={title}
                 onBlur={(e) => {

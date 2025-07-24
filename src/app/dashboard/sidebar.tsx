@@ -139,7 +139,7 @@ const Sidebar = () => {
           </motion.div>
         </div>
       </motion.div>
-      <MobileNav/>
+      
     </>
      
 
