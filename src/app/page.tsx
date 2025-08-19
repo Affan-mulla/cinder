@@ -1,10 +1,20 @@
-import Image from "next/image";
+"use client";
+import CTA from "@/components/Landing/CTA";
+import Features from "@/components/Landing/Features";
+import Footer from "@/components/Landing/Footer";
+import Header from "@/components/Landing/Header";
+import Hero from "@/components/Landing/Hero";
+import Pricing from "@/components/Landing/Pricing";
 
 export default function Home() {
   return (
-   <div className="bg-background min-h-screen flex items-center justify-center flex-col gap-3">
-    <h1 className="font-heading text-6xl">Landing Page</h1>
-    <p className="font-body text-4xl">Under Construction...<span className="">🚧</span></p>
-   </div>
+   <div className="min-h-screen bg-background scroll-smooth">
+      <Header />
+      <Hero />
+      <Features />
+      <Pricing />
+      <CTA />
+      <Footer />
+    </div>
   );
 }

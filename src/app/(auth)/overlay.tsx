@@ -1,30 +1,31 @@
-"use client"
-import { useSignIn } from '@clerk/nextjs'
-import { Loader } from 'lucide-react'
-import Image from 'next/image'
-import React from 'react'
+"use client";
+import { Button } from "@/components/ui/button";
+import { useSignIn } from "@clerk/nextjs";
+import { ArrowLeft, Loader } from "lucide-react";
+import { redirect } from "next/navigation";
+import React from "react";
 
-const Overlay = ({children} : {children: React.ReactNode}) => {
-  const {isLoaded} = useSignIn()
-  
+const Overlay = ({ children }: { children: React.ReactNode }) => {
+  const { isLoaded } = useSignIn();
+
   return (
-     <div className='bg-neutral-950 w-full h-screen  py-16 px-10 flex justify-center bg-[url("/bg-login.svg")] bg-cover'>
-      <div className="flex justify-center items-center h-full bg-blur-3xl overflow-hidden md:w-fit w-full bg-neutral-950 rounded-2xl border-[2px] border-neutral-700/90">
-        <div className="md:dark:bg-secondary bg-neutral-900 px-5 py-4  h-full w-full flex-1 justify-center items-center flex">
-         {isLoaded ? children : <Loader className="animate-spin text-white" />}
+    <div className="min-h-screen flex items-center flex-col justify-center bg-gradient-to-br from-background via-background to-primary/5 p-4">
+      <Button
+        onClick={() => redirect("/")}
+        variant={"link"}
+        className=" text-muted-foreground hover:text-primary transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4 mr-2" />
+        Back to home
+      </Button>
+      {isLoaded && children}
+      {!isLoaded && (
+        <div className="flex items-center justify-center">
+          <Loader className="animate-spin" />
         </div>
-        <div className="w-fit h-full  pl-5 py-5 justify-center items-center flex-1 md:flex hidden">
-          <Image
-            src="/login.png"
-            alt="logo"
-            className="  "
-            width={500}
-            height={500}
-          />
-        </div>
-      </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default Overlay
+export default Overlay;
