@@ -27,7 +27,7 @@ const Header = () => {
         </nav>
         
         <div className="flex items-center space-x-4">
-          <Button className="hero-button text-white" onClick={() => redirect("/sign-up")}>
+          <Button className="hero-button text-white" onClick={() => redirect("/dashboard")}>
             Get Started
           </Button>
           <ModeToggle />

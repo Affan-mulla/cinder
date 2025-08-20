@@ -5,7 +5,9 @@ export const dynamic = "force-dynamic";
 
 const AuthCallbackPage = async () => {
   const auth = await onAuthenticateUser();  
+  console.log(auth);
   if (auth.status === 200 || auth.status === 201) {
+    
     redirect("/dashboard/home");
   } else if (auth.status === 401 || auth.status === 500) {
     redirect("/");
